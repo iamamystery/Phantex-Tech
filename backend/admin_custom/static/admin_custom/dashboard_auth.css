@@ -1,0 +1,41 @@
+.stat-card, [class*="stat_card"], .dashboard-stat {
+  background: #ffffff !important;
+  border: 1.5px solid var(--v-card-border) !important;
+  border-radius: var(--v-radius-lg) !important;
+  padding: 24px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+[class*="stat"] h2, [class*="stat"] p {
+  color: var(--v-text) !important;
+}
+
+.dashboard h1 {
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+}
+
+#recent-actions-module .module {
+  background: #ffffff !important;
+  border: 1px solid var(--v-card-border) !important;
+  border-radius: var(--v-radius-lg) !important;
+}
+
+body.login {
+  background: #0a0305 !important;
+}
+
+body.login form {
+  background: #ffffff !important;
+  border-radius: 16px !important;
+  padding: 40px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid var(--v-card-border) !important;
+}
+
+body.login .submit-row {
+  background: transparent !important;
+  border: none !important;
+  padding: 20px 0 0 !important;
+}

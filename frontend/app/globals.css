@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #FAFAF8;
+  --bg-secondary: #FFF7ED;
+  --bg-glass: rgba(255, 255, 255, 0.6);
+  --text-primary: #0F0F0F;
+  --text-muted: #78716C;
+  --accent: #F59E0B;
+  --accent-hover: #D97706;
+  --accent-secondary: #EA580C;
+  --border: #E7E5E4;
+  --border-glass: rgba(255, 255, 255, 0.3);
+  --shadow-warm: rgba(245, 158, 11, 0.08);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Marquee animation (TechMarquee — pure CSS, no JS) ─────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 35s linear infinite;
+  /* Width must be auto so the duplicated content fits */
+  width: max-content;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* ─── Marquee animations (MagicUI) ─────────────────────────────────── */
+@keyframes marquee-main {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% - var(--gap))); }
+}
+
+@keyframes marquee-vertical {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-100% - var(--gap))); }
+}
+
+.animate-marquee {
+  animation: marquee-main var(--duration) linear infinite;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration) linear infinite;
+}
+
+/* ─── Glass utility class (Custom user effect) ─────────────────────────────────── */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.15);
+}
+
+.glass-effect .title {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.glass-effect .icon {
+  color: var(--text-muted);
+}
+
+.glass-effect .accent {
+  color: var(--accent);
+}

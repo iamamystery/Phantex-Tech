@@ -1,0 +1,30 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: phantextech_backend
+    volumes:
+      - ./backend/db.sqlite3:/app/db.sqlite3
+      - ./backend/media:/app/media
+    environment:
+      - DJANGO_DEBUG=False
+      - ALLOWED_HOSTS=localhost,127.0.0.1,backend
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --no-input --verbosity 0 &&
+             gunicorn --bind 0.0.0.0:8000 core.wsgi:application"
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: phantextech_frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: always

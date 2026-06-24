@@ -1,0 +1,43 @@
+input[type="submit"], button[type="submit"], .button, a.button {
+  border-radius: var(--v-radius) !important;
+  padding: 9px 20px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+}
+
+input[type="submit"], button[type="submit"], .button-primary {
+  background-color: var(--v-red) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+input[type="submit"]:hover, button[type="submit"]:hover {
+  background-color: var(--v-red-dark) !important;
+}
+
+.button-secondary, .button {
+  background: #ffffff !important;
+  border: 1.5px solid var(--v-border) !important;
+  color: #334155 !important;
+}
+
+.deletelink, a.deletelink {
+  background: transparent !important;
+  color: var(--v-red) !important;
+  border: 1.5px solid var(--v-red) !important;
+  padding: 8px 18px !important;
+}
+
+.submit-row {
+  background: #f8fafc !important;
+  border-top: 1px solid var(--v-card-border) !important;
+  padding: 14px 20px !important;
+  display: flex !important;
+  gap: 12px !important;
+  border-radius: 0 0 var(--v-radius-lg) var(--v-radius-lg) !important;
+}

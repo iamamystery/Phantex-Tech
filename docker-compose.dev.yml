@@ -1,0 +1,24 @@
+# docker-compose.dev.yml
+services:
+  backend:
+    build: ./backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app        # reads your existing code, doesn't change it
+    ports:
+      - "8000:8000"
+    env_file: .env
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    env_file: .env
+    environment:
+      - CHOKIDAR_USEPOLLING=true

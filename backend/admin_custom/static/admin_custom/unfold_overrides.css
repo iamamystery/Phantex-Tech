@@ -1,0 +1,25 @@
+[class*="border-base-"], [class*="bg-base-"], [class*="ring-"] {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+[class*="bg-primary-"] {
+  background-color: var(--v-red-muted) !important;
+}
+
+[class*="text-primary-"] {
+  color: var(--v-red) !important;
+}
+
+[class*="bg-white"] {
+  background-color: #ffffff !important;
+}
+
+[class*="border-gray-"] {
+  border-color: #f1f5f9 !important;
+}
+
+.unfold-input, [class*="unfold"] input {
+  border: 1.5px solid var(--v-border) !important;
+  border-radius: var(--v-radius) !important;
+}
