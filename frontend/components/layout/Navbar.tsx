@@ -13,7 +13,6 @@ const NAV_LINKS = [
   { href: '/work', label: 'Work' },
   { href: '/about', label: 'About' },
   { href: '/blog', label: 'Blog' },
-  { href: '/schedule', label: 'Schedule' },
 ] as const
 
 // Minimum scroll delta (px) before we change state — prevents micro-scroll jitter
@@ -72,8 +71,8 @@ export default function Navbar() {
       <div
         className={cn(
           "inline-flex items-center justify-center overflow-hidden border relative",
-          "glass-effect",
-          isCollapsed ? "max-w-[160px] h-[44px]" : "max-w-[860px] h-[52px]",
+          "glass-effect nav-enter",
+          isCollapsed ? "max-w-[160px] h-[44px]" : "max-w-[1000px] h-[52px]",
         )}
         style={{
           borderRadius: '999px',
@@ -95,7 +94,7 @@ export default function Navbar() {
               transition: 'margin 0.55s cubic-bezier(0.22, 1, 0.36, 1)',
             }}
           >
-            Phan<span className="text-indigo-500">tex</span> Tech
+            Phan<span className="text-amber-400">tex</span>
           </Link>
 
           {/* Links + CTA — fade in/out with staggered delay */}
@@ -135,34 +134,17 @@ export default function Navbar() {
                     )}
                   </span>
                   {isActive(href) && (
-                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0.5 h-0.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0.5 h-0.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
                   )}
                 </Link>
               ))}
             </div>
 
-            {/* Social Icons (desktop only) */}
-            <div className="hidden md:flex items-center gap-2 mr-3">
-              {socialLinks.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  className="text-[var(--text-muted)] hover:text-indigo-500 transition-colors duration-200"
-                  dangerouslySetInnerHTML={{ __html: s.iconSvg }}
-                />
-              ))}
-            </div>
-
-            {/* Divider */}
-            <div className="w-[1px] h-4 bg-stone-200 mr-4" />
 
             {/* CTA */}
             <Link
-              href="/schedule"
-              className="bg-indigo-600 text-white text-[10px] uppercase font-bold tracking-widest px-4 py-2 rounded-full hover:bg-indigo-700 transition-colors duration-200"
+              href="/contact"
+              className="bg-amber-400 text-black text-[10px] uppercase font-bold tracking-widest px-4 py-2 rounded-full hover:bg-amber-500 transition-colors duration-200"
             >
               Book a Call
             </Link>

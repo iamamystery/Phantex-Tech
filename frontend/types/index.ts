@@ -191,6 +191,9 @@ export interface WorkProcessStep {
   phase_label: string
   title: string
   description: string
+  bullets?: string[]
+  deliverable?: string
+  duration?: string
   tags: string[]
   theme_color: string
 }

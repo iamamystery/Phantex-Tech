@@ -16,8 +16,6 @@ const COMPANY_LINKS = [
   { href: '/about', label: 'About Us' },
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
-  { href: '/schedule', label: 'Schedule a Call' },
-  { href: '/chat', label: 'AI Chat' },
 ]
 
 export default function Footer() {
@@ -27,7 +25,7 @@ export default function Footer() {
     <footer className="bg-[#0A0A0A] relative overflow-hidden">
       {/* Globe as background decoration */}
       <div className="absolute inset-x-0 bottom-0 z-0 flex items-center justify-center opacity-70">
-        <span className="pointer-events-none absolute top-10 translate-y-[-20%] bg-linear-to-b from-indigo-900/20 to-indigo-500/10 bg-clip-text text-center text-8xl leading-none font-bold whitespace-pre-wrap text-transparent">
+        <span className="pointer-events-none absolute top-10 translate-y-[-20%] bg-linear-to-b from-amber-900/20 to-amber-500/10 bg-clip-text text-center text-8xl leading-none font-bold whitespace-pre-wrap text-transparent">
           Phantex Tech
         </span>
         <Globe />
@@ -39,7 +37,7 @@ export default function Footer() {
       {/* Content wrapper with higher z-index */}
       <div className="relative z-10">
         {/* Indigo gradient line */}
-        <div className="h-px bg-gradient-to-r from-transparent via-indigo-400/50 to-transparent" />
+        <div className="h-px bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
 
         <div className="max-w-7xl mx-auto px-6 pt-16 pb-8">
           {/* 3-column grid */}
@@ -50,7 +48,7 @@ export default function Footer() {
                 href="/"
                 className="font-display font-semibold text-2xl text-[var(--text-primary)] hover:opacity-80 transition-opacity duration-150 inline-block"
               >
-                Phan<span className="text-indigo-500">tex</span> Tech
+                Phan<span className="text-amber-400">tex</span> Tech
               </Link>
               <p className="font-body text-sm text-[var(--text-muted)] leading-relaxed max-w-xs">
                 We build what powers you — helping SaaS startups scale with
@@ -66,7 +64,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={s.label}
-                    className="w-9 h-9 flex items-center justify-center rounded-lg border border-stone-200 text-stone-500 hover:text-indigo-500 hover:border-indigo-300 transition-all duration-150 cursor-pointer"
+                    className="w-9 h-9 flex items-center justify-center rounded-lg border border-stone-200 text-stone-500 hover:text-amber-500 hover:border-amber-300 transition-all duration-150 cursor-pointer"
                     dangerouslySetInnerHTML={{ __html: s.iconSvg }}
                   />
                 ))}
@@ -83,7 +81,7 @@ export default function Footer() {
                   <li key={href}>
                     <Link
                       href={href}
-                      className="font-body text-sm text-[var(--text-muted)] hover:text-indigo-500 transition-colors duration-150 cursor-pointer"
+                      className="font-body text-sm text-[var(--text-muted)] hover:text-amber-500 transition-colors duration-150 cursor-pointer"
                     >
                       {label}
                     </Link>
@@ -103,7 +101,7 @@ export default function Footer() {
                     <li key={href}>
                       <Link
                         href={href}
-                        className="font-body text-sm text-[var(--text-muted)] hover:text-indigo-500 transition-colors duration-150 cursor-pointer"
+                        className="font-body text-sm text-[var(--text-muted)] hover:text-amber-500 transition-colors duration-150 cursor-pointer"
                       >
                         {label}
                       </Link>
@@ -118,7 +116,7 @@ export default function Footer() {
                 </h3>
                 <a
                   href="mailto:hello@phantextech.com"
-                  className="font-body text-sm text-[var(--text-muted)] hover:text-indigo-500 transition-colors duration-150 cursor-pointer block mb-1"
+                  className="font-body text-sm text-[var(--text-muted)] hover:text-amber-500 transition-colors duration-150 cursor-pointer block mb-1"
                 >
                   hello@phantextech.com
                 </a>
@@ -134,8 +132,8 @@ export default function Footer() {
             </p>
             <p className="font-body text-xs text-[var(--text-muted)]">
               Built with{' '}
-              <span className="text-indigo-500 font-medium">Python</span> &amp;{' '}
-              <span className="text-indigo-500 font-medium">Next.js</span>
+              <span className="text-amber-400 font-medium">Python</span> &amp;{' '}
+              <span className="text-amber-400 font-medium">Next.js</span>
             </p>
           </div>
         </div>

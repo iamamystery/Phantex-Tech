@@ -8,10 +8,10 @@ import { HowWeWorkSettings, WorkProcessStep } from '@/types'
 /* ─── Defaults ────────────────────────────────────────────────── */
 const DEFAULT_SETTINGS: HowWeWorkSettings = {
   id: 0,
-  section_label: "Our Process",
+  section_label: "Phantex Precision Framework",
   title_line_1: "HOW WE",
   title_line_2_highlight: "WORK",
-  description: "From requirements to production — a battle-tested process that ships fast and scales clean."
+  description: "Four phases. Zero guesswork. From brief to production — a structured system that ships fast and scales clean."
 }
 
 const DEFAULT_STEPS: WorkProcessStep[] = [
@@ -19,12 +19,54 @@ const DEFAULT_STEPS: WorkProcessStep[] = [
     id: 1,
     phase_number: '01',
     phase_label: 'Phase One',
-    title: 'Discovery',
-    description: 'We audit your needs, data sources, and define scope.',
-    tags: ['Requirements Audit', 'Scope Definition'],
-    theme_color: '#E8C5BE',
+    title: 'Clarity Before Code',
+    description: 'We map your product, constraints, and goals before writing a single line. No assumptions.',
+    bullets: ['Stakeholder brief & goals', 'Technical & data audit', 'Competitor landscape', 'Scope definition'],
+    deliverable: 'Signed project brief + architecture decision record',
+    duration: '2–3 Days',
+    tags: ['Requirements Audit', 'Scope Definition', 'Technical Audit'],
+    theme_color: '#F5F0E8',
     order: 0
-  }
+  },
+  {
+    id: 2,
+    phase_number: '02',
+    phase_label: 'Phase Two',
+    title: 'The System, Designed',
+    description: 'We architect the full technical stack — infrastructure, data flow, and delivery milestones.',
+    bullets: ['Tech stack selection', 'API & data architecture', 'Sprint planning', 'Risk & edge-case mapping'],
+    deliverable: 'Technical blueprint + project timeline',
+    duration: '3–5 Days',
+    tags: ['Tech Stack', 'API Architecture', 'Sprint Planning'],
+    theme_color: '#ECEEF2',
+    order: 1
+  },
+  {
+    id: 3,
+    phase_number: '03',
+    phase_label: 'Phase Three',
+    title: 'Code That Scales',
+    description: 'Focused sprints, clean commits, zero shortcuts. We build exactly what was scoped — fast.',
+    bullets: ['Agile two-week sprints', 'Daily async Loom updates', 'CI/CD pipeline from day one', 'Peer-reviewed code throughout'],
+    deliverable: 'Tested, deployed codebase on your infrastructure',
+    duration: '1–6 Weeks',
+    tags: ['Agile Sprints', 'CI/CD', 'Code Review', 'Daily Updates'],
+    theme_color: '#E8E2D8',
+    order: 2
+  },
+  {
+    id: 4,
+    phase_number: '04',
+    phase_label: 'Phase Four',
+    title: 'Ship It. Own It.',
+    description: 'We handle deployment, monitoring setup, and a structured handover so your team fully owns it.',
+    bullets: ['Production deploy & smoke tests', 'Monitoring & alert setup', 'Full technical documentation', '30-day post-launch support'],
+    deliverable: 'Live product + complete technical handover',
+    duration: '1–2 Days',
+    tags: ['Production Deploy', 'Monitoring', 'Documentation', '30-Day Support'],
+    theme_color: '#F5C518',
+    order: 3
+  },
 ]
 
 /* ─── Phase dots ─────────────────────────────────────────────── */
@@ -148,33 +190,47 @@ function ProcessCard({
           </h3>
 
           {/* Desc */}
-          <p className="font-body text-[15px] leading-[1.78] max-w-[460px] mb-9 flex-1 text-stone-700 font-medium">
+          <p className="font-body text-[14px] leading-[1.7] max-w-[460px] mb-6 text-stone-600 font-medium">
             {step.description}
           </p>
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2">
-            {step.tags.map((tag, ti) => (
-              <span
-                key={tag}
-                className="text-xs font-medium px-3.5 py-1.5 rounded-full"
-                style={
-                  ti === 0
-                    ? {
-                        border: '1px solid rgba(0,0,0,0.12)',
-                        color: 'rgba(0,0,0,0.8)',
-                        background: 'rgba(255,255,255,0.4)',
-                      }
-                    : {
-                        border: '1px solid rgba(0,0,0,0.08)',
-                        color: 'rgba(0,0,0,0.6)',
-                        background: 'transparent',
-                      }
-                }
-              >
-                {tag}
-              </span>
-            ))}
+          {/* Bullets */}
+          {step.bullets && step.bullets.length > 0 && (
+            <ul className="flex flex-col gap-2 mb-6 flex-1">
+              {step.bullets.map((b) => (
+                <li key={b} className="flex items-center gap-2.5 text-[13px] text-stone-700 font-medium">
+                  <span
+                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                    style={{ background: 'rgba(0,0,0,0.5)' }}
+                  />
+                  {b}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {/* Divider */}
+          <div className="w-full h-px mb-5" style={{ background: 'rgba(0,0,0,0.07)' }} />
+
+          {/* Deliverable + Duration */}
+          <div className="flex items-start justify-between gap-4 mb-5">
+            {step.deliverable && (
+              <div>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-stone-400 block mb-1">You get</span>
+                <span className="font-body text-[13px] text-stone-700 font-semibold leading-snug">{step.deliverable}</span>
+              </div>
+            )}
+            {step.duration && (
+              <div className="flex-shrink-0 text-right">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-stone-400 block mb-1">Duration</span>
+                <span
+                  className="font-mono text-[12px] font-bold px-3 py-1 rounded-full"
+                  style={{ background: 'rgba(0,0,0,0.07)', color: 'rgba(0,0,0,0.7)' }}
+                >
+                  {step.duration}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -253,39 +309,39 @@ export default function HowWeWork({
       }
       
       const currentStep = Math.round((windowScrollY - elTop) / vh);
-      
-      // 1. If at TOP edge and scrolling UP -> let native scroll gracefully exit up
+
+      // Release native scroll at top edge (scrolling up)
       if (currentStep === 0 && e.deltaY < 0) return;
-      
-      // 2. If at BOTTOM edge and scrolling DOWN -> let native scroll gracefully exit down
-      if (currentStep >= steps.length && e.deltaY > 0) return;
-      
-      // 3. We are fully inside! Hijack and lock the scroll to prevent momentum overshoot.
+
+      // Exit section only when EXACTLY at the last snapped card position (not just approaching it).
+      // Math.round maps a wide range to step N-1, so we guard with a tight pixel tolerance.
+      const lastCardScrollY = elTop + (steps.length - 1) * vh;
+      const isSettledAtLastCard = Math.abs(windowScrollY - lastCardScrollY) < 30;
+      if (isSettledAtLastCard && e.deltaY > 0 && !isAnimating) {
+        e.preventDefault();
+        isAnimating = true;
+        window.scrollTo({ top: elTop + el.offsetHeight, behavior: 'smooth' });
+        setTimeout(() => { isAnimating = false; wheelAccumulator = 0; }, 1200);
+        return;
+      }
+
+      // Inside section — hijack scroll
       e.preventDefault();
-      
+
       if (isAnimating) return;
-      
-      // Sum small trackpad movements or instant mousewheel notches
+
       wheelAccumulator += e.deltaY;
-      
-      // Threshold requires deliberate scroll (filters tiny trackpad stutters)
+
       if (Math.abs(wheelAccumulator) > 50) {
         const direction = wheelAccumulator > 0 ? 1 : -1;
-        wheelAccumulator = 0; // Reset
-        
-        let nextStep = currentStep + direction;
-        
-        // Clamp integer boundaries (500vh container has steps 0 to 4)
-        if (nextStep < 0) nextStep = 0;
-        if (nextStep > steps.length - 1) nextStep = steps.length - 1;
-        
+        wheelAccumulator = 0;
+
+        const nextStep = Math.min(Math.max(currentStep + direction, 0), steps.length - 1);
+
         if (nextStep !== currentStep) {
           isAnimating = true;
-          // Execute exact 100vh native smooth glide to the next card perfectly
           window.scrollTo({ top: elTop + (nextStep * vh), behavior: 'smooth' });
-          
-          // Cooldown ensures one precise card transition at a time without chaos
-          setTimeout(() => { isAnimating = false; }, 850);
+          setTimeout(() => { isAnimating = false; }, 1200);
         }
       }
     };

@@ -1,151 +1,304 @@
-import Image from 'next/image'
-import { cn } from "@/lib/utils"
-import { Marquee } from "@/components/magicui/marquee"
-import { getTestimonials } from "@/lib/api"
-import { getMediaUrl } from "@/lib/utils"
-import type { Testimonial } from "@/types"
+'use client'
 
-const FALLBACK_TESTIMONIALS: Testimonial[] = [
-  {
-    id: -1,
-    name: "Sarah Chen",
-    username: "@sarahc_fintech",
-    body: "Phantex Tech transformed our data collection process. Their scrapers are rock-solid and handle our high-volume requirements without breaking. A total game-changer for our market analysis.",
-    avatar: "https://i.pravatar.cc/150?u=sarah",
-    order: 0
-  },
-  {
-    id: -2,
-    name: "Marcus Thorne",
-    username: "@mthorne_saas",
-    body: "The AI pipelines Phantex Tech built for us have automated 90% of our lead qualification. The integration was seamless, and the performance is incredible. Highly recommended!",
-    avatar: "https://i.pravatar.cc/150?u=marcus",
-    order: 1
-  },
-  {
-    id: -3,
-    name: "Elena Rodriguez",
-    username: "@elena_dev_lead",
-    body: "Finally, a team that understands the complexity of modern web automation. They navigate anti-bot measures like pros. Our engineering team can finally focus on product instead of maintenance.",
-    avatar: "https://i.pravatar.cc/150?u=elena",
-    order: 2
-  },
-  {
-    id: -4,
-    name: "Dr. Aris Varma",
-    username: "@arisv_biotech",
-    body: "The precision of the data extraction tool Phantex Tech developed for our research is unmatched. Their expertise in Python and Playwright is evident in every line of code.",
-    avatar: "https://i.pravatar.cc/150?u=aris",
-    order: 3
-  },
-  {
-    id: -5,
-    name: "Jessica Low",
-    username: "@jesslow_ops",
-    body: "Working with Phantex Tech was the best decision we made this year. They didn't just build a tool; they provided a strategic automation partner that scales with our growth.",
-    avatar: "https://i.pravatar.cc/150?u=jessica",
-    order: 4
-  },
-  {
-    id: -6,
-    name: "David Park",
-    username: "@dpark_growth",
-    body: "The speed and reliability of their browser automation scripts are impressive. We've seen a 4x increase in our data processing speed since implementation. Professional and highly skilled.",
-    avatar: "https://i.pravatar.cc/150?u=david",
-    order: 5
-  },
-  {
-    id: -7,
-    name: "Sophia Moretti",
-    username: "@sophia_founder",
-    body: "Phantex Tech delivered a custom AI solution that literally saved us hundreds of man-hours a month. Their communication is top-notch, and the delivery was on schedule.",
-    avatar: "https://i.pravatar.cc/150?u=sophia",
-    order: 6
-  },
-  {
-    id: -8,
-    name: "Alex Rivera",
-    username: "@arivera_cto",
-    body: "I've worked with many scraping agencies, but Phantex Tech is in a league of their own. Their code is clean, documented, and exceptionally performant. They truly are the experts.",
-    avatar: "https://i.pravatar.cc/150?u=alex",
-    order: 7
-  }
-]
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
-function ReviewCard({ testimonial }: { testimonial: Testimonial }) {
-  const avatarUrl = getMediaUrl(testimonial.avatar)
-  
+/* ─── Rotating headline words ────────────────────────────────────── */
+const WORDS = ['speak', 'scale', 'deliver', 'convert', 'compound']
+
+/* ─── Isolated rotating word — only THIS re-renders on each tick ─── */
+function RotatingWord() {
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => setIndex(i => (i + 1) % WORDS.length), 3500)
+    return () => clearInterval(id)
+  }, [])
+
   return (
-    <figure
-      className={cn(
-        "relative w-80 h-full cursor-pointer overflow-hidden p-8 transition-all duration-300",
-        "bg-white dark:bg-stone-900/50 backdrop-blur-sm",
-        "border border-amber-100 dark:border-white/10",
-        "hover:border-amber-400/50 dark:hover:border-amber-500/30 shadow-sm hover:shadow-xl",
-        "rounded-[2rem]"
-      )}
-    >
-      <div className="flex flex-row items-center gap-4 mb-6">
-        <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-amber-100 dark:border-white/10 shadow-inner">
-          {avatarUrl ? (
-            <Image 
-              src={avatarUrl} 
-              alt={testimonial.name} 
-              fill 
-              className="object-cover"
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-amber-100 to-amber-50 flex items-center justify-center font-bold text-amber-700">
-              {testimonial.name.charAt(0)}
-            </div>
-          )}
-        </div>
-        <div className="flex flex-col">
-          <figcaption className="text-sm font-bold text-stone-900 dark:text-white tracking-tight">
-            {testimonial.name}
-          </figcaption>
-          <p className="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest">
-            {testimonial.username}
-          </p>
-        </div>
-      </div>
-      <blockquote className="text-sm leading-relaxed text-stone-600 dark:text-stone-300 italic font-medium">
-        "{testimonial.body}"
-      </blockquote>
-    </figure>
+    <span className="relative inline-block text-amber-400" style={{ verticalAlign: 'bottom' }}>
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={WORDS[index]}
+          className="inline-block"
+          style={{ willChange: 'opacity, transform' }}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+        >
+          {WORDS[index]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
   )
 }
 
-export default async function TestimonialMarquee() {
-  let testimonials: Testimonial[] = []
-  try {
-    testimonials = await getTestimonials()
-  } catch (error) {
-    console.error("Failed to fetch testimonials, using fallbacks:", error)
-  }
+/* ─── Data ──────────────────────────────────────────────────────── */
 
-  // Use fallback data if API returns nothing
-  const data = testimonials.length > 0 ? testimonials : FALLBACK_TESTIMONIALS
+const FEATURED = {
+  name: 'Aryan Mehra',
+  role: 'Co-founder & CTO',
+  company: 'Liveflow — Revenue Analytics SaaS',
+  quote:
+    'We were manually pulling data from 12 platforms into spreadsheets every Monday morning. Phantex replaced that entire workflow with a single automated pipeline. Six hours back, every week, per analyst.',
+  metric: '6+ hrs saved · per analyst · per week',
+  initial: 'A',
+}
 
-  const firstRow = data.slice(0, Math.ceil(data.length / 2))
-  const secondRow = data.slice(Math.ceil(data.length / 2))
+const SECONDARIES = [
+  {
+    name: 'Nadia Osei',
+    role: 'Head of Operations',
+    company: 'Series A Fintech',
+    quote:
+      "Our data refresh cycle went from 24 hours to 15 minutes. We didn't realise how much time we were losing until it was gone.",
+    metric: '96× faster refresh',
+    initial: 'N',
+  },
+  {
+    name: 'Tom Bergqvist',
+    role: 'Founder',
+    company: 'B2B SaaS',
+    quote:
+      'They built our entire Supabase backend in three weeks — clean schema, solid RLS policies, full API docs on delivery. No back-and-forth.',
+    metric: null,
+    initial: 'T',
+  },
+  {
+    name: 'Priya Nair',
+    role: 'Product Lead',
+    company: 'E-commerce Platform',
+    quote:
+      'The scraper handles 50k+ SKUs daily. Zero failures in four months. That kind of reliability is genuinely hard to find.',
+    metric: '50k+ SKUs/day · 0 failures',
+    initial: 'P',
+  },
+  {
+    name: 'Kieran Walsh',
+    role: 'CTO',
+    company: 'Proptech Startup',
+    quote:
+      'Clean code, proper docs, no scope creep. It felt like working with a senior engineer who was already part of the team.',
+    metric: null,
+    initial: 'K',
+  },
+  {
+    name: 'Mei-Lin Zhao',
+    role: 'Data Lead',
+    company: 'Logistics SaaS',
+    quote:
+      'Our pipeline went from an 8-hour overnight job to under 2 hours. That unlocked same-day reporting for our entire ops team.',
+    metric: '4× faster pipeline',
+    initial: 'M',
+  },
+  {
+    name: 'Rafael Santos',
+    role: 'CEO',
+    company: 'Marketplace Startup',
+    quote:
+      'They automated our lead enrichment flow end to end. 80% less manual work, same output quality, none of the overhead.',
+    metric: '80% less manual work',
+    initial: 'R',
+  },
+]
 
+const STATS = [
+  { value: '50+', label: 'Projects Delivered' },
+  { value: '98%', label: 'Client Satisfaction' },
+  { value: '40h+', label: 'Avg. Hours Saved / Month' },
+  { value: '4.9', label: 'Average Rating' },
+]
+
+/* ─── Avatar initial bubble ─────────────────────────────────────── */
+function Avatar({ initial, dark = false }: { initial: string; dark?: boolean }) {
   return (
-    <div className="relative flex w-full flex-col items-center justify-center overflow-hidden py-2">
-      <Marquee pauseOnHover className="[--duration:50s] [--gap:2rem]">
-        {firstRow.map((review) => (
-          <ReviewCard key={review.id} testimonial={review} />
-        ))}
-      </Marquee>
-      <Marquee reverse pauseOnHover className="[--duration:55s] [--gap:2rem] mt-8">
-        {secondRow.map((review) => (
-          <ReviewCard key={review.id} testimonial={review} />
-        ))}
-      </Marquee>
-      
-      {/* Gradients to fade edges - theme aware */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[var(--bg-primary)] to-transparent z-10"></div>
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[var(--bg-primary)] to-transparent z-10"></div>
+    <div
+      className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-black text-sm flex-shrink-0"
+      style={
+        dark
+          ? { background: 'rgba(245,193,24,0.15)', color: '#F5C518' }
+          : { background: '#F5F0E8', color: '#0C0C0C' }
+      }
+    >
+      {initial}
     </div>
+  )
+}
+
+/* ─── Section ────────────────────────────────────────────────────── */
+export default function TestimonialMarquee() {
+  return (
+    <section className="w-full py-28 bg-[var(--bg-primary)]">
+      <div className="max-w-7xl mx-auto px-6">
+
+        {/* ── Header ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="mb-16"
+        >
+          <span className="font-mono text-[11px] uppercase tracking-[0.35em] text-amber-500 font-bold block mb-4">
+            Client Standout
+          </span>
+          <h2 className="font-display font-black text-[var(--text-primary)] text-[clamp(36px,4.5vw,56px)] leading-[1.05] tracking-tight mb-4">
+            {'The results '}<RotatingWord />{'.'}
+          </h2>
+          <p className="font-body text-[var(--text-muted)] text-base leading-relaxed max-w-md">
+            Across 50+ projects, one pattern holds — when the system works, teams get their time back.
+          </p>
+        </motion.div>
+
+        {/* ── Featured card ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.65, ease: 'easeOut', delay: 0.1 }}
+          className="mb-6"
+        >
+          <div
+            className="relative w-full rounded-[2rem] overflow-hidden p-10 md:p-14"
+            style={{ background: '#0C0C0C' }}
+          >
+            {/* Subtle amber glow bottom-right */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                bottom: '-60px',
+                right: '-60px',
+                width: '400px',
+                height: '400px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(245,193,24,0.08) 0%, transparent 70%)',
+              }}
+            />
+
+            {/* Decorative quote mark */}
+            <span
+              className="absolute top-8 right-12 font-display font-black leading-none pointer-events-none select-none"
+              style={{ fontSize: '120px', color: 'rgba(255,255,255,0.04)' }}
+            >
+              "
+            </span>
+
+            {/* Quote */}
+            <blockquote
+              className="font-display font-semibold text-white leading-[1.45] tracking-[-0.01em] mb-10 relative z-10"
+              style={{ fontSize: 'clamp(20px, 2.4vw, 28px)', maxWidth: '780px' }}
+            >
+              "{FEATURED.quote}"
+            </blockquote>
+
+            {/* Divider */}
+            <div className="w-full h-px mb-8" style={{ background: 'rgba(255,255,255,0.08)' }} />
+
+            {/* Author + metric */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 relative z-10">
+              <div className="flex items-center gap-4">
+                <Avatar initial={FEATURED.initial} dark />
+                <div>
+                  <p className="font-display font-bold text-white text-sm">{FEATURED.name}</p>
+                  <p className="font-body text-stone-400 text-xs mt-0.5">{FEATURED.role}</p>
+                  <p className="font-mono text-stone-500 text-[10px] uppercase tracking-widest mt-0.5">{FEATURED.company}</p>
+                </div>
+              </div>
+              <div
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full self-start sm:self-auto"
+                style={{ background: 'rgba(245,193,24,0.12)', border: '1px solid rgba(245,193,24,0.25)' }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
+                <span className="font-mono text-amber-400 text-[11px] font-bold tracking-wide">{FEATURED.metric}</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── Secondary grid ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
+          {SECONDARIES.map((t, i) => (
+            <motion.div
+              key={t.name}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.07 }}
+            >
+              <div
+                className="h-full p-7 rounded-2xl border transition-all duration-300 group"
+                style={{
+                  background: '#FFFFFF',
+                  borderColor: '#EDEAE4',
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+                }}
+                onMouseEnter={e => {
+                  ;(e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(245,193,24,0.45)'
+                  ;(e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 24px rgba(0,0,0,0.07)'
+                  ;(e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)'
+                }}
+                onMouseLeave={e => {
+                  ;(e.currentTarget as HTMLDivElement).style.borderColor = '#EDEAE4'
+                  ;(e.currentTarget as HTMLDivElement).style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'
+                  ;(e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)'
+                }}
+              >
+                <blockquote className="font-body text-[14px] text-stone-600 leading-[1.72] mb-6 font-medium">
+                  "{t.quote}"
+                </blockquote>
+
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <Avatar initial={t.initial} />
+                    <div>
+                      <p className="font-display font-bold text-stone-900 text-[13px]">{t.name}</p>
+                      <p className="font-body text-stone-400 text-[11px] mt-0.5">{t.role} · {t.company}</p>
+                    </div>
+                  </div>
+                  {t.metric && (
+                    <span
+                      className="flex-shrink-0 font-mono text-[10px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap"
+                      style={{ background: '#FEF9EC', color: '#B45309', border: '1px solid #FDE68A' }}
+                    >
+                      {t.metric}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* ── Stats bar ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="grid grid-cols-2 md:grid-cols-4 rounded-2xl overflow-hidden"
+          style={{ border: '1px solid #EDEAE4' }}
+        >
+          {STATS.map((s, i) => (
+            <div
+              key={s.label}
+              className="flex flex-col items-center justify-center py-8 px-4 text-center"
+              style={{
+                borderRight: i < STATS.length - 1 ? '1px solid #EDEAE4' : 'none',
+                background: i % 2 === 0 ? '#FFFFFF' : '#FAFAF8',
+              }}
+            >
+              <span className="font-display font-black text-[var(--text-primary)] text-[clamp(26px,3vw,36px)] leading-none tracking-tight mb-1.5">
+                {s.value}
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-widest text-stone-400 font-medium">
+                {s.label}
+              </span>
+            </div>
+          ))}
+        </motion.div>
+
+      </div>
+    </section>
   )
 }

@@ -5,7 +5,6 @@ import OrganizationSchema from '@/components/seo/schemas/OrganizationSchema'
 import Hero from '@/components/home/Hero'
 import ServicesSnap from '@/components/home/ServicesSnap'
 import FeaturedWork from '@/components/home/FeaturedWork'
-import SectionHeader from '@/components/ui/SectionHeader'
 import TestimonialMarquee from '@/components/ui/TestimonialMarquee'
 import HomeCTA from '@/components/home/HomeCTA'
 
@@ -30,15 +29,7 @@ export default function HomePage() {
       <FeaturedWork />
       
       {/* ─── Testimonials ────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-6 mt-20 mb-10">
-        <SectionHeader
-          label="Wall of Love"
-          title="What our partners say about us"
-          subtitle="Don't just take our word for it. Here is what SaaS founders and engineering leads have to say."
-          align="center"
-        />
-        <TestimonialMarquee />
-      </div>
+      <TestimonialMarquee />
 
       <HomeCTA />
     </main>

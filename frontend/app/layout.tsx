@@ -6,6 +6,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { TechMarquee } from '@/components/layout/TechMarquee'
 import { ThemeProvider } from '@/components/theme-provider'
+import ChatWidget from '@/components/chat/ChatWidget'
 
 // ─── Fonts ────────────────────────────────────────────────────────────────────
 const syne = Syne({
@@ -73,6 +74,7 @@ export default function RootLayout({
           {children}
           <TechMarquee />
           <Footer />
+          <ChatWidget />
         </ThemeProvider>
       </body>
     </html>

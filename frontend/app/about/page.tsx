@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { getMembers, getPageSEO } from '@/lib/api'
 import { buildMetadata } from '@/components/seo/MetaTags'
-import SectionHeader from '@/components/ui/SectionHeader'
 import FadeIn from '@/components/ui/FadeIn'
 import TechBadge from '@/components/ui/TechBadge'
 import OrganizationSchema from '@/components/seo/schemas/OrganizationSchema'
@@ -10,188 +9,501 @@ import { getMediaUrl } from '@/lib/utils'
 import { MagicCard } from '@/components/magicui/magic-card'
 import type { Member } from '@/types'
 import TestimonialMarquee from '@/components/ui/TestimonialMarquee'
+import Link from 'next/link'
 
 export const revalidate = 0
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getPageSEO('about')
   return buildMetadata(seo, {
-    title: 'Phantex Tech Web Automation Agency Team | About Us',
+    title: 'About Phantex Tech — We Engineer the Future',
     description:
-      'We are a team of automation engineers and AI specialists dedicated to helping SaaS startups scale through intelligent data extraction and process automation.',
+      'Phantex Tech builds AI systems, automation platforms, backend infrastructure, and scalable digital products for ambitious companies worldwide.',
     path: '/about',
   })
 }
+
+// ─── Page data ────────────────────────────────────────────────────────────────
+
+const CAPABILITIES = [
+  {
+    title: 'AI Systems',
+    items: ['AI Agents', 'Workflow Automation', 'Custom Integrations', 'Intelligent Operations'],
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Backend Engineering',
+    items: ['Django & FastAPI', 'REST & GraphQL APIs', 'Scalable Infrastructure', 'Database Architecture'],
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Full Stack Products',
+    items: ['MVP Development', 'SaaS Platforms', 'Dashboards', 'Web Applications'],
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Automation Systems',
+    items: ['Browser Automation', 'Data Pipelines', 'Data Extraction', 'Business Process Automation'],
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+      </svg>
+    ),
+  },
+]
+
+const PHILOSOPHY = [
+  {
+    number: '01',
+    title: 'Automation First',
+    body: 'Every manual process is a future bottleneck. We design systems where automation is the default, not the addition — reducing human error and operational overhead at every layer.',
+  },
+  {
+    number: '02',
+    title: 'Built For Scale',
+    body: 'Architecture decisions made today determine what is possible tomorrow. We build foundations that grow without breaking — from first deployment to ten million users.',
+  },
+  {
+    number: '03',
+    title: 'AI With Purpose',
+    body: 'We integrate AI where it creates measurable leverage, not for novelty. Intelligence should reduce friction, accelerate decisions, and surface insights — not add complexity.',
+  },
+  {
+    number: '04',
+    title: 'Engineering Excellence',
+    body: 'Clean code, proper documentation, testable systems. Quality is not a delivery checkpoint — it is the engineering baseline we maintain from day one.',
+  },
+]
+
+const METRICS = [
+  { value: '50+',   label: 'Projects Delivered' },
+  { value: '100k+', label: 'Records Processed Daily' },
+  { value: '99.9%', label: 'Workflow Reliability' },
+  { value: '<24h',  label: 'Average Response Time' },
+]
+
+const REGIONS = [
+  { name: 'Americas', detail: 'United States · Canada · Latin America' },
+  { name: 'Europe',   detail: 'UK · Germany · Netherlands · Nordics' },
+  { name: 'MENA',     detail: 'UAE · Saudi Arabia · Egypt · Pakistan' },
+]
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function AboutPage() {
   let members: Member[] = []
   try {
     members = await getMembers()
   } catch (error) {
-    if (process.env.NODE_ENV === 'production') {
-      if (process.env.NEXT_BUILD_MODE !== '1') {
-        console.warn('About: API unreachable at build time. Dynamic content will be fetched at runtime.')
-      }
-    } else {
+    if (process.env.NODE_ENV !== 'production') {
       console.error('Failed to fetch team members:', error)
     }
   }
 
   return (
-    <main className="pt-32 pb-24">
+    <main style={{ background: '#FAFAF8' }}>
       <OrganizationSchema />
-      
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Intro */}
-        <FadeIn className="mb-24">
-          <SectionHeader
-            label="Our Story"
-            title="We build what powers you"
-            subtitle="Phantex Tech was founded with a single mission: to provide SaaS startups with the industrial-grade automation tools and data pipelines they need to compete at scale."
-            align="left"
-          />
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-12 font-body text-lg text-[var(--text-muted)] leading-relaxed">
-            <p>
-              In the fast-paced world of SaaS, data is the most valuable asset. But extracting that data and automating the workflows around it is often complex, brittle, and time-consuming. We saw too many teams struggling with broken scrapers and manual data entry.
-            </p>
-            <p>
-              That&apos;s where we come in. We combine deep expertise in browser automation, backend architecture, and AI to build solutions that don&apos;t just work—they scale. We&apos;re not just a service provider; we&apos;re your technical partner in automation.
-            </p>
-          </div>
-        </FadeIn>
- 
-        {/* Team Section with Atmospheric Background */}
-        <div className="relative -mx-6 px-6 py-40 mt-24 mb-32 overflow-hidden group/team">
-          {/* Section Gradient Background */}
-          <div className="absolute inset-0 bg-[#0A0A0A]" />
-          
-          {/* Subtle Glow Overlays */}
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px] pointer-events-none" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-500/5 rounded-full blur-[120px] pointer-events-none" />
 
-          <div className="relative z-10 max-w-7xl mx-auto">
-            <FadeIn className="mb-16">
-              <SectionHeader
-                label="The Team"
-                title="Meet the experts behind the code"
-                align="center"
-                dark
+      {/* ════════════════════════════════════════════════════════════
+          1 · HERO
+      ════════════════════════════════════════════════════════════ */}
+      <section className="pt-36 pb-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <FadeIn>
+            {/* Eyebrow — exact Testimonials pattern */}
+            <span
+              className="font-mono font-bold uppercase block mb-6"
+              style={{ fontSize: '11px', letterSpacing: '0.35em', color: '#F59E0B' }}
+            >
+              About Phantex Tech
+            </span>
+
+            {/* Display headline */}
+            <h1
+              className="font-display font-black tracking-tight leading-[0.92] mb-8"
+              style={{ fontSize: 'clamp(56px, 8vw, 108px)', color: '#111111' }}
+            >
+              WE ENGINEER<br />THE FUTURE
+            </h1>
+
+            {/* Amber rule — visual anchor below headline */}
+            <div className="mb-8" style={{ width: '56px', height: '3px', background: '#F59E0B' }} />
+
+            {/* Supporting copy — #555555 on #FAFAF8 = 7.5:1 */}
+            <p
+              className="font-body leading-relaxed"
+              style={{ fontSize: '18px', color: '#555555', maxWidth: '520px' }}
+            >
+              Building AI systems, automation platforms, backend infrastructure,
+              and scalable digital products for ambitious companies around the world.
+            </p>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════
+          2 · VISION — dark card, mirrors featured testimonial
+      ════════════════════════════════════════════════════════════ */}
+      <section className="pb-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <FadeIn>
+            <div
+              className="relative overflow-hidden"
+              style={{
+                background: '#0C0C0C',
+                borderRadius: '2rem',
+                padding: 'clamp(2.5rem, 5vw, 5rem)',
+              }}
+            >
+              {/* Ambient amber glow — bottom-right, same as featured testimonial */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  bottom: '-80px', right: '-80px',
+                  width: '500px', height: '500px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(245,158,11,0.07) 0%, transparent 65%)',
+                }}
               />
+              {/* Decorative large arrow — lightweight visual texture */}
+              <span
+                className="absolute font-display font-black pointer-events-none select-none"
+                style={{
+                  top: '1.5rem', right: '2.5rem',
+                  fontSize: '140px', lineHeight: 1,
+                  color: 'rgba(255,255,255,0.03)',
+                }}
+              >
+                →
+              </span>
+
+              <div className="relative z-10 max-w-3xl">
+                <span
+                  className="font-mono font-bold uppercase block mb-6"
+                  style={{ fontSize: '11px', letterSpacing: '0.35em', color: '#F59E0B' }}
+                >
+                  Vision
+                </span>
+                <h2
+                  className="font-display font-black text-white leading-[1.05] tracking-tight mb-8"
+                  style={{ fontSize: 'clamp(32px, 4vw, 52px)' }}
+                >
+                  The future isn't waiting.
+                </h2>
+                <div className="space-y-5">
+                  <p
+                    className="font-body leading-relaxed"
+                    style={{ fontSize: '17px', color: 'rgba(255,255,255,0.68)' }}
+                  >
+                    Companies that embrace intelligent systems move faster, scale better, and operate
+                    more efficiently than those that don't. AI is not a future capability — it is the
+                    operating layer of modern business today.
+                  </p>
+                  <p
+                    className="font-body leading-relaxed"
+                    style={{ fontSize: '17px', color: 'rgba(255,255,255,0.68)' }}
+                  >
+                    Phantex Tech exists to build that competitive advantage. We design, engineer, and
+                    deploy the automation systems, AI pipelines, and scalable infrastructure that turn
+                    operational complexity into speed.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════
+          3 · WHAT WE BUILD — 2×2 capability cards
+      ════════════════════════════════════════════════════════════ */}
+      <section className="pb-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <FadeIn className="mb-14">
+            <span
+              className="font-mono font-bold uppercase block mb-4"
+              style={{ fontSize: '11px', letterSpacing: '0.35em', color: '#F59E0B' }}
+            >
+              Capabilities
+            </span>
+            <h2
+              className="font-display font-black tracking-tight"
+              style={{ fontSize: 'clamp(32px, 4vw, 48px)', color: '#111111' }}
+            >
+              What We Build
+            </h2>
+          </FadeIn>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {CAPABILITIES.map(({ title, items, icon }, i) => (
+              <FadeIn key={title} delay={i * 0.08}>
+                {/* Card — Testimonials secondary card pattern + hover */}
+                <div
+                  className="h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.07)] hover:border-amber-300/60"
+                  style={{
+                    background: '#FFFFFF',
+                    border: '1px solid #EDEAE4',
+                    borderRadius: '20px',
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+                    padding: '2rem',
+                  }}
+                >
+                  {/* Icon badge */}
+                  <div
+                    className="mb-5 flex items-center justify-center"
+                    style={{
+                      width: '44px', height: '44px',
+                      background: 'rgba(245,158,11,0.10)',
+                      border: '1px solid rgba(245,158,11,0.20)',
+                      borderRadius: '12px',
+                      color: '#F59E0B',
+                    }}
+                  >
+                    {icon}
+                  </div>
+
+                  {/* Title — #111111 on #FFFFFF = 19:1 */}
+                  <h3
+                    className="font-display font-black mb-5"
+                    style={{ fontSize: '20px', color: '#111111' }}
+                  >
+                    {title}
+                  </h3>
+
+                  {/* Capabilities list */}
+                  <ul className="space-y-3">
+                    {items.map((item) => (
+                      <li
+                        key={item}
+                        className="flex items-center gap-3 font-body"
+                        style={{ fontSize: '14px', color: '#555555' }}
+                      >
+                        <span
+                          style={{
+                            width: '5px', height: '5px',
+                            borderRadius: '50%',
+                            background: '#F59E0B',
+                            flexShrink: 0,
+                          }}
+                        />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════
+          4 · HOW WE THINK — philosophy cards with amber left border
+      ════════════════════════════════════════════════════════════ */}
+      <section className="pb-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <FadeIn className="mb-14">
+            <span
+              className="font-mono font-bold uppercase block mb-4"
+              style={{ fontSize: '11px', letterSpacing: '0.35em', color: '#F59E0B' }}
+            >
+              Philosophy
+            </span>
+            <h2
+              className="font-display font-black tracking-tight"
+              style={{ fontSize: 'clamp(32px, 4vw, 48px)', color: '#111111' }}
+            >
+              How We Think
+            </h2>
+          </FadeIn>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {PHILOSOPHY.map(({ number, title, body }, i) => (
+              <FadeIn key={title} delay={i * 0.08}>
+                <div
+                  className="h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.07)]"
+                  style={{
+                    background: '#FFFFFF',
+                    border: '1px solid #EDEAE4',
+                    borderLeft: '3px solid #F59E0B',
+                    borderRadius: '20px',
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+                    padding: '2rem',
+                  }}
+                >
+                  {/* Number — very light, structural only */}
+                  <span
+                    className="font-mono font-bold block mb-5"
+                    style={{ fontSize: '11px', letterSpacing: '0.2em', color: '#CCCCCC' }}
+                  >
+                    {number}
+                  </span>
+                  {/* Title */}
+                  <h3
+                    className="font-display font-black mb-3"
+                    style={{ fontSize: '20px', color: '#111111' }}
+                  >
+                    {title}
+                  </h3>
+                  {/* Body — #666666 on #FFFFFF = 7.2:1 */}
+                  <p
+                    className="font-body leading-relaxed"
+                    style={{ fontSize: '14px', color: '#666666' }}
+                  >
+                    {body}
+                  </p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════
+          TEAM — retained from original, dark section
+      ════════════════════════════════════════════════════════════ */}
+      {members.length > 0 && (
+        <section
+          className="relative overflow-hidden"
+          style={{ background: '#0A0A0A', padding: 'clamp(4rem, 8vw, 8rem) 0' }}
+        >
+          {/* Ambient glows */}
+          <div
+            className="absolute top-0 left-1/4 w-96 h-96 rounded-full pointer-events-none"
+            style={{ background: 'rgba(245,158,11,0.06)', filter: 'blur(120px)' }}
+          />
+          <div
+            className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full pointer-events-none"
+            style={{ background: 'rgba(245,120,11,0.04)', filter: 'blur(120px)' }}
+          />
+
+          <div className="relative z-10 max-w-7xl mx-auto px-6">
+            <FadeIn className="mb-14 text-center">
+              <span
+                className="font-mono font-bold uppercase block mb-4"
+                style={{ fontSize: '11px', letterSpacing: '0.35em', color: '#F59E0B' }}
+              >
+                The Team
+              </span>
+              <h2
+                className="font-display font-black text-white tracking-tight"
+                style={{ fontSize: 'clamp(32px, 4vw, 48px)' }}
+              >
+                Meet the engineers
+              </h2>
             </FadeIn>
-    
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {members.map((member, i) => {
                 const avatarUrl = getMediaUrl(member.avatar)
                 return (
                   <FadeIn key={member.name} delay={i * 0.1}>
-                    <MagicCard 
-                      className="p-10 flex flex-col items-center h-[600px] text-center border-none bg-stone-900/40 backdrop-blur-xl"
-                      gradientFrom="#FEF3C7" // Light Champagne
-                      gradientTo="#D97706"   // Rich Amber
+                    <MagicCard
+                      className="p-10 flex flex-col items-center h-[580px] text-center border-none bg-stone-900/40 backdrop-blur-xl"
+                      gradientFrom="#FEF3C7"
+                      gradientTo="#D97706"
                       gradientSize={350}
                     >
-                      <div className="relative w-28 h-28 rounded-3xl overflow-hidden mb-8 shadow-2xl ring-2 ring-white/10 group-hover:ring-amber-500/30 transition-all duration-500">
+                      {/* Avatar */}
+                      <div className="relative w-24 h-24 rounded-2xl overflow-hidden mb-7 shadow-2xl ring-2 ring-white/10">
                         {avatarUrl ? (
-                          <Image 
-                            src={avatarUrl} 
-                            alt={member.name} 
-                            fill 
-                            className="object-cover scale-100 group-hover:scale-105 transition-transform duration-700" 
-                          />
+                          <Image src={avatarUrl} alt={member.name} fill className="object-cover" />
                         ) : (
-                          <div className="absolute inset-0 bg-gradient-to-br from-stone-800 to-stone-900 flex items-center justify-center text-amber-500/50">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+                          <div
+                            className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-stone-800 to-stone-900"
+                            style={{ color: 'rgba(245,158,11,0.4)' }}
+                          >
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                             </svg>
                           </div>
                         )}
                       </div>
-                      
-                      <h3 className="font-display text-2xl font-black text-white mb-2 tracking-tight">
+
+                      {/* Name */}
+                      <h3
+                        className="font-display font-black text-white tracking-tight mb-2"
+                        style={{ fontSize: '22px' }}
+                      >
                         {member.name}
                       </h3>
-                      <div>
-                        <p className="font-display text-[10px] font-bold text-amber-200 bg-amber-900/30 uppercase tracking-[0.35em] mb-6 px-4 py-1.5 rounded-full border border-amber-500/20 inline-block shadow-sm">
-                          {member.role}
-                        </p>
-                      </div>
-                      
-                      <p className="font-body text-sm text-stone-400 leading-relaxed mb-8 max-w-[280px] mx-auto group-hover:text-white transition-colors line-clamp-2">
+
+                      {/* Role badge */}
+                      <p
+                        className="font-mono font-bold uppercase mb-6 px-4 py-1.5 rounded-full inline-block"
+                        style={{
+                          fontSize: '10px', letterSpacing: '0.35em',
+                          color: '#FDE68A',
+                          background: 'rgba(245,158,11,0.12)',
+                          border: '1px solid rgba(245,158,11,0.20)',
+                        }}
+                      >
+                        {member.role}
+                      </p>
+
+                      {/* Bio */}
+                      <p
+                        className="font-body text-sm leading-relaxed mb-8 max-w-[260px] mx-auto line-clamp-3"
+                        style={{ color: 'rgba(255,255,255,0.55)' }}
+                      >
                         {member.bio}
                       </p>
-    
-                      <div className="flex items-center justify-center gap-6 mb-8">
+
+                      {/* Social links */}
+                      <div className="flex items-center justify-center gap-4 mb-8">
                         {member.linkedin && (
-                          <div className="group/icon relative">
-                            <a 
-                              href={member.linkedin} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="w-11 h-11 rounded-2xl bg-stone-900/50 flex items-center justify-center text-amber-500/60 hover:text-amber-200 hover:bg-amber-900/40 border border-white/10 hover:border-amber-500/50 transition-all duration-300 pointer-events-auto shadow-sm"
-                            >
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                              </svg>
-                            </a>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 bg-stone-900/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-xl opacity-0 scale-95 group-hover/icon:opacity-100 group-hover/icon:scale-100 transition-all pointer-events-none whitespace-nowrap z-50 shadow-xl border border-white/10">
-                              LinkedIn
-                              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-stone-900/90" />
-                            </div>
-                          </div>
+                          <a
+                            href={member.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors duration-200"
+                            style={{
+                              background: 'rgba(255,255,255,0.05)',
+                              border: '1px solid rgba(255,255,255,0.10)',
+                              color: 'rgba(245,158,11,0.6)',
+                            }}
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                            </svg>
+                          </a>
                         )}
                         {member.github && (
-                          <div className="group/icon relative">
-                            <a 
-                              href={member.github} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="w-11 h-11 rounded-2xl bg-stone-900/50 flex items-center justify-center text-amber-500/60 hover:text-amber-200 hover:bg-amber-900/40 border border-white/10 hover:border-amber-500/50 transition-all duration-300 pointer-events-auto shadow-sm"
-                            >
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-                              </svg>
-                            </a>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 bg-stone-900/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-xl opacity-0 scale-95 group-hover/icon:opacity-100 group-hover/icon:scale-100 transition-all pointer-events-none whitespace-nowrap z-50 shadow-xl border border-white/10">
-                              GitHub
-                              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-stone-900/90" />
-                            </div>
-                          </div>
-                        )}
-                        {member.email && (
-                          <div className="group/icon relative">
-                            <a 
-                              href={`mailto:${member.email}`}
-                              className="w-11 h-11 rounded-2xl bg-stone-900/50 flex items-center justify-center text-amber-500/60 hover:text-amber-200 hover:bg-amber-900/40 border border-white/10 hover:border-amber-500/50 transition-all duration-300 pointer-events-auto shadow-sm"
-                            >
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                              </svg>
-                            </a>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 bg-stone-900/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-xl opacity-0 scale-95 group-hover/icon:opacity-100 group-hover/icon:scale-100 transition-all pointer-events-none whitespace-nowrap z-50 shadow-xl border border-white/10">
-                              {member.email}
-                              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-stone-900/90" />
-                            </div>
-                          </div>
-                        )}
-                        {member.phone_number && (
-                          <div className="group/icon relative">
-                            <a 
-                              href={`tel:${member.phone_number}`}
-                              className="w-11 h-11 rounded-2xl bg-stone-900/50 flex items-center justify-center text-amber-500/60 hover:text-amber-200 hover:bg-amber-900/40 border border-white/10 hover:border-amber-500/50 transition-all duration-300 pointer-events-auto shadow-sm"
-                            >
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                              </svg>
-                            </a>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 bg-stone-900/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-xl opacity-0 scale-95 group-hover/icon:opacity-100 group-hover/icon:scale-100 transition-all pointer-events-none whitespace-nowrap z-50 shadow-xl border border-white/10">
-                              {member.phone_number}
-                              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-stone-900/90" />
-                            </div>
-                          </div>
+                          <a
+                            href={member.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors duration-200"
+                            style={{
+                              background: 'rgba(255,255,255,0.05)',
+                              border: '1px solid rgba(255,255,255,0.10)',
+                              color: 'rgba(245,158,11,0.6)',
+                            }}
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+                            </svg>
+                          </a>
                         )}
                       </div>
-    
-                      <div className="mt-auto pt-8 border-t border-white/5 w-full">
+
+                      {/* Skills */}
+                      <div
+                        className="mt-auto pt-6 w-full"
+                        style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+                      >
                         <div className="flex flex-wrap justify-center gap-2 px-1 max-h-[80px] overflow-hidden">
                           {member.skills.map((skill: string) => (
                             <TechBadge key={skill} name={skill} />
@@ -204,46 +516,203 @@ export default async function AboutPage() {
               })}
             </div>
           </div>
-        </div>
+        </section>
+      )}
 
-        {/* Testimonials Section */}
-        <div className="mt-32">
-          <SectionHeader
-            label="Client Feedback"
-            title="Trusted by engineering teams"
-            subtitle="We build tools that engineering leads and product managers love to use."
-            align="center"
-          />
-          <TestimonialMarquee />
-        </div>
+      {/* ════════════════════════════════════════════════════════════
+          5 · GLOBAL BY DESIGN — two-column split
+      ════════════════════════════════════════════════════════════ */}
+      <section className="py-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-        {/* Values Section */}
-        <FadeIn className="mt-32 py-20 rounded-3xl bg-amber-500/5 border border-amber-500/10 text-center px-6">
-          <SectionHeader
-            label="Our Values"
-            title="Quality without compromise"
-            align="center"
-          />
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="space-y-3">
-              <h4 className="font-display font-bold text-[var(--text-primary)]">Resilience</h4>
-              <p className="font-body text-sm text-[var(--text-muted)]">We build scrapers that handle real-world web complexity.</p>
-            </div>
-            <div className="space-y-3">
-              <h4 className="font-display font-bold text-[var(--text-primary)]">Transparency</h4>
-              <p className="font-body text-sm text-[var(--text-muted)]">Clear communication and production-ready documentation.</p>
-            </div>
-            <div className="space-y-3">
-              <h4 className="font-display font-bold text-[var(--text-primary)]">Speed</h4>
-              <p className="font-body text-sm text-[var(--text-muted)]">Fast delivery without sacrificing code quality.</p>
-            </div>
-            <div className="space-y-3">
-              <h4 className="font-display font-bold text-[var(--text-primary)]">Trust</h4>
-              <p className="font-body text-sm text-[var(--text-muted)]">Your data and intellectual property are always secure.</p>
-            </div>
+            {/* Left: text */}
+            <FadeIn>
+              <span
+                className="font-mono font-bold uppercase block mb-5"
+                style={{ fontSize: '11px', letterSpacing: '0.35em', color: '#F59E0B' }}
+              >
+                Reach
+              </span>
+              <h2
+                className="font-display font-black tracking-tight leading-[1.0] mb-7"
+                style={{ fontSize: 'clamp(36px, 4.5vw, 56px)', color: '#111111' }}
+              >
+                GLOBAL BY<br />DESIGN
+              </h2>
+              <div className="space-y-4">
+                <p className="font-body leading-relaxed" style={{ fontSize: '16px', color: '#555555' }}>
+                  We collaborate with startups, founders, and growing businesses
+                  across multiple regions.
+                </p>
+                <p className="font-body leading-relaxed" style={{ fontSize: '16px', color: '#555555' }}>
+                  Great engineering is not limited by geography. Our systems, workflows,
+                  and communication practices are built for global collaboration —
+                  async-first, documentation-driven, and delivery-focused.
+                </p>
+              </div>
+            </FadeIn>
+
+            {/* Right: region table — stats-bar treatment */}
+            <FadeIn delay={0.15}>
+              <div
+                className="overflow-hidden"
+                style={{ border: '1px solid #EDEAE4', borderRadius: '20px', boxShadow: '0 1px 6px rgba(0,0,0,0.05)' }}
+              >
+                {REGIONS.map(({ name, detail }, i) => (
+                  <div
+                    key={name}
+                    className="flex items-center justify-between px-6 py-5"
+                    style={{
+                      background: i % 2 === 0 ? '#FFFFFF' : '#FAFAF8',
+                      borderBottom: i < REGIONS.length - 1 ? '1px solid #F0EDE8' : 'none',
+                    }}
+                  >
+                    {/* Region name — #111111 */}
+                    <span
+                      className="font-display font-black"
+                      style={{ fontSize: '17px', color: '#111111' }}
+                    >
+                      {name}
+                    </span>
+                    {/* Detail — #777777 = 4.6:1 on white */}
+                    <span
+                      className="font-body text-right"
+                      style={{ fontSize: '13px', color: '#777777' }}
+                    >
+                      {detail}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </FadeIn>
           </div>
-        </FadeIn>
-      </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════
+          6 · METRICS — exact Testimonials stats-bar pattern
+      ════════════════════════════════════════════════════════════ */}
+      <section className="pb-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <FadeIn>
+            <div
+              className="grid grid-cols-2 md:grid-cols-4 overflow-hidden"
+              style={{ border: '1px solid #EDEAE4', borderRadius: '20px' }}
+            >
+              {METRICS.map(({ value, label }, i) => (
+                <div
+                  key={label}
+                  className="flex flex-col items-center justify-center py-10 px-4 text-center"
+                  style={{
+                    background: i % 2 === 0 ? '#FFFFFF' : '#FAFAF8',
+                    borderRight: i < METRICS.length - 1 ? '1px solid #EDEAE4' : 'none',
+                  }}
+                >
+                  <span
+                    className="font-display font-black leading-none tracking-tight mb-2"
+                    style={{ fontSize: 'clamp(28px, 3vw, 42px)', color: '#111111' }}
+                  >
+                    {value}
+                  </span>
+                  <span
+                    className="font-mono font-bold uppercase"
+                    style={{ fontSize: '10px', letterSpacing: '0.2em', color: '#777777' }}
+                  >
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════
+          TESTIMONIALS — existing component, retained
+      ════════════════════════════════════════════════════════════ */}
+      <TestimonialMarquee />
+
+      {/* ════════════════════════════════════════════════════════════
+          7 · CTA — dark card, mirrors Vision section
+      ════════════════════════════════════════════════════════════ */}
+      <section className="py-8 pb-28">
+        <div className="max-w-7xl mx-auto px-6">
+          <FadeIn>
+            <div
+              className="relative overflow-hidden text-center"
+              style={{
+                background: '#0C0C0C',
+                borderRadius: '2rem',
+                padding: 'clamp(3rem, 6vw, 6rem) clamp(2rem, 5vw, 5rem)',
+              }}
+            >
+              {/* Radial amber glow — center-bottom */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'radial-gradient(ellipse at 50% 110%, rgba(245,158,11,0.09) 0%, transparent 60%)',
+                }}
+              />
+
+              <div className="relative z-10">
+                <span
+                  className="font-mono font-bold uppercase block mb-6"
+                  style={{ fontSize: '11px', letterSpacing: '0.35em', color: '#F59E0B' }}
+                >
+                  Start Building
+                </span>
+
+                <h2
+                  className="font-display font-black text-white tracking-tight leading-[1.0] mb-8 mx-auto"
+                  style={{ fontSize: 'clamp(36px, 5.5vw, 72px)', maxWidth: '760px' }}
+                >
+                  READY TO BUILD SOMETHING BIG?
+                </h2>
+
+                <p
+                  className="font-body leading-relaxed mb-12 mx-auto"
+                  style={{ fontSize: '17px', color: 'rgba(255,255,255,0.62)', maxWidth: '560px' }}
+                >
+                  Whether you're launching an MVP, building an AI-powered product,
+                  automating operations, or scaling infrastructure — we're ready to
+                  engineer the future with you.
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  {/* Primary CTA — amber, same as Testimonials metric badge color family */}
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center gap-3 font-display font-bold uppercase px-8 py-4 rounded-xl transition-colors duration-200 group"
+                    style={{ fontSize: '12px', letterSpacing: '0.2em', background: '#F59E0B', color: '#111111' }}
+                  >
+                    Schedule Discovery Call
+                    <svg
+                      className="w-4 h-4 transition-transform duration-150 group-hover:translate-x-0.5"
+                      viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                  </Link>
+
+                  {/* Secondary — ghost */}
+                  <Link
+                    href="/work"
+                    className="inline-flex items-center gap-2 font-mono font-bold uppercase transition-colors duration-200 hover:text-amber-400"
+                    style={{ fontSize: '11px', letterSpacing: '0.25em', color: 'rgba(255,255,255,0.40)' }}
+                  >
+                    View Our Work
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
     </main>
   )
 }

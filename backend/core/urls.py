@@ -15,7 +15,6 @@ urlpatterns = [
     path('api/contact/', include('contact.urls')),
     path('api/seo/', include('seo.urls')),
     path('api/services/', include('services.urls')),
-    path('api/chat/', include('chat.urls')),
     # path('api/scheduling/', include('scheduling.urls')),  # disabled: scheduling app source not present
     path('api/sitemap/urls/', SitemapURLsView.as_view(), name='sitemap-urls'),
     path('auth/', include('social_django.urls', namespace='social')),

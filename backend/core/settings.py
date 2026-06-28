@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'services',
     'admin_custom',
     'authentication',
-    'chat',
     # 'scheduling',  # disabled: app source not present in repo (would break startup)
     'social_django',
 ]

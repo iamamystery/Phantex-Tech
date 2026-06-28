@@ -16,9 +16,15 @@ interface MagicCardBaseProps {
   children?: React.ReactNode
   className?: string
   style?: React.CSSProperties
+  /** When false, the inner border + rim-light edge layers are not rendered. Defaults to true. */
+  bordered?: boolean
   gradientSize?: number
   gradientFrom?: string
   gradientTo?: string
+  tiltIntensity?: number
+  springStiffness?: number
+  springDamping?: number
+  springMass?: number
 }
 
 interface MagicCardGradientProps extends MagicCardBaseProps {
@@ -74,6 +80,11 @@ export function MagicCard(props: MagicCardProps) {
   const glowSize = isOrbMode(props) ? (props.glowSize ?? 420) : 420
   const glowBlur = isOrbMode(props) ? (props.glowBlur ?? 60) : 60
   const glowOpacity = isOrbMode(props) ? (props.glowOpacity ?? 0.9) : 0.9
+  const bordered = props.bordered ?? true
+  const tiltIntensity = props.tiltIntensity ?? 30
+  const springStiffness = props.springStiffness ?? 300
+  const springDamping = props.springDamping ?? 30
+  const springMass = props.springMass ?? 0.8
   const { theme, systemTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
@@ -88,13 +99,13 @@ export function MagicCard(props: MagicCardProps) {
   const mouseX = useMotionValue(-gradientSize)
   const mouseY = useMotionValue(-gradientSize)
 
-  // 3D Tilt values — Ultra-responsive: instant-react + super smooth
-  const rotateX = useSpring(0, { stiffness: 300, damping: 30, mass: 0.8 })
-  const rotateY = useSpring(0, { stiffness: 300, damping: 30, mass: 0.8 })
-  
-  // Gloss/Shine values — Boosted to keep up with faster tilt
-  const glossX = useSpring(0, { stiffness: 300, damping: 30 })
-  const glossY = useSpring(0, { stiffness: 300, damping: 30 })
+  // 3D Tilt values — configurable via props for per-card feel
+  const rotateX = useSpring(0, { stiffness: springStiffness, damping: springDamping, mass: springMass })
+  const rotateY = useSpring(0, { stiffness: springStiffness, damping: springDamping, mass: springMass })
+
+  // Gloss/Shine values
+  const glossX = useSpring(0, { stiffness: springStiffness, damping: springDamping })
+  const glossY = useSpring(0, { stiffness: springStiffness, damping: springDamping })
   const glossOpacity = useSpring(0, { stiffness: 250, damping: 35 })
 
   // Performance-optimized Shadow calculation using useTransform instead of nested springs
@@ -119,9 +130,19 @@ export function MagicCard(props: MagicCardProps) {
   const orbY = useSpring(mouseY, { stiffness: 200, damping: 40, mass: 1 })
   const orbVisible = useSpring(0, { stiffness: 250, damping: 50 })
 
+  // Computed unconditionally (hook) — only rendered when `bordered`.
+  const borderGradient = useMotionTemplate`
+    radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px,
+      ${gradientFrom},
+      ${gradientTo},
+      rgba(0,0,0,0.1) 100%
+    )
+  `
+
   const modeRef = useRef(mode)
   const glowOpacityRef = useRef(glowOpacity)
   const gradientSizeRef = useRef(gradientSize)
+  const tiltIntensityRef = useRef(tiltIntensity)
 
   useEffect(() => {
     modeRef.current = mode
@@ -134,6 +155,10 @@ export function MagicCard(props: MagicCardProps) {
   useEffect(() => {
     gradientSizeRef.current = gradientSize
   }, [gradientSize])
+
+  useEffect(() => {
+    tiltIntensityRef.current = tiltIntensity
+  }, [tiltIntensity])
 
   const reset = useCallback(
     (reason: ResetReason = "leave") => {
@@ -176,8 +201,8 @@ export function MagicCard(props: MagicCardProps) {
       // Compute tilt — normalized to [-1, 1] then scaled to ±30°
       const hw = rect.width * 0.5
       const hh = rect.height * 0.5
-      rotateY.set(((x - hw) / hw) * 30)
-      rotateX.set(((hh - y) / hh) * 30)
+      rotateY.set(((x - hw) / hw) * tiltIntensityRef.current)
+      rotateX.set(((hh - y) / hh) * tiltIntensityRef.current)
     },
     [mouseX, mouseY, rotateX, rotateY, glossX, glossY, glossOpacity]
   )
@@ -227,29 +252,31 @@ export function MagicCard(props: MagicCardProps) {
           willChange: "transform, box-shadow",
         }}
       >
-        {/* Isolated Border Layer (Paint Optimization) - Enhanced visibility */}
-        <motion.div
-          className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] transform-gpu opacity-40 dark:opacity-60"
-          style={{
-            background: useMotionTemplate`
-              radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px,
-                ${gradientFrom},
-                ${gradientTo},
-                rgba(0,0,0,0.1) 100%
-              )
-            `,
-            willChange: "background",
-          }}
-        />
+        {/* Isolated Border Layer (Paint Optimization) - Enhanced visibility.
+            Part of the border decoration, so it is skipped when bordered=false
+            (otherwise its off-card radial default bleeds a faint diagonal edge). */}
+        {bordered && (
+          <motion.div
+            className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] transform-gpu opacity-40 dark:opacity-60"
+            style={{ background: borderGradient, willChange: "background" }}
+          />
+        )}
 
         {/* Padding Box Mask (Equivalent to nested structure) */}
         <div className="absolute inset-px z-1 rounded-[inherit] bg-transparent pointer-events-none" />
 
         {/* Inner Glass Layer - Optimized for Color Harmony & Contrast */}
-        <div className="absolute inset-px z-20 rounded-[inherit] bg-white/5 dark:bg-[var(--text-primary)]/40 backdrop-blur-[32px] border border-[var(--border)] dark:border-white/10 pointer-events-none" />
-        
+        <div
+          className={cn(
+            "absolute inset-px z-20 rounded-[inherit] bg-white/5 dark:bg-[var(--text-primary)]/40 backdrop-blur-[32px] pointer-events-none",
+            bordered && "border border-[var(--border)] dark:border-white/10"
+          )}
+        />
+
         {/* Rim Light / Edge Highlight - Integrating Site Accent */}
-        <div className="absolute inset-px z-25 rounded-[inherit] pointer-events-none opacity-60 ring-1 ring-inset ring-[var(--accent)]/20 dark:ring-white/10" />
+        {bordered && (
+          <div className="absolute inset-px z-25 rounded-[inherit] pointer-events-none opacity-60 ring-1 ring-inset ring-[var(--accent)]/20 dark:ring-white/10" />
+        )}
 
 
         {/* Dynamic Gloss/Shimmer Layer */}

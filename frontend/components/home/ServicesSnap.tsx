@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import Link from 'next/link'
 import FadeIn from '@/components/ui/FadeIn'
+import AmbientBackground from '@/components/home/AmbientBackground'
 
 /* ─── Types ───────────────────────────────────────────────────── */
 interface ServiceItem {
@@ -306,16 +307,13 @@ function CTACard() {
 /* ─── Section ─────────────────────────────────────────────────── */
 export default function ServicesSnap() {
   return (
-    <section className="py-20 md:py-28 bg-[var(--bg-primary)] relative overflow-hidden">
+    <section className="py-24 md:py-32 bg-[var(--bg-primary)] relative overflow-hidden">
 
-      {/* Subtle page-level warm glow */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at 50% -10%, rgba(245,158,11,0.07) 0%, transparent 65%)' }}
-        aria-hidden="true"
-      />
+      {/* Section divider hairline + quiet ambient lighting (no grid here) */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/15 to-transparent" aria-hidden="true" />
+      <AmbientBackground variant="section" grid={false} />
 
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
 
         {/* ── Header ────────────────────────────────────── */}
         <FadeIn className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
