@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+
+import dj_database_url
 from django.templatetags.static import static
 from dotenv import load_dotenv
 
@@ -229,11 +231,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+# Database: uses DATABASE_URL (e.g. Render Postgres) when present, otherwise
+# falls back to the local SQLite file so local development is unchanged.
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -266,7 +270,9 @@ STORAGES = {
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_ROOT is overridable so a Render persistent disk can be mounted for
+# uploaded media (admin/CKEditor uploads). Defaults to the local folder.
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT', str(BASE_DIR / 'media'))
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -283,9 +289,23 @@ REST_FRAMEWORK = {
 }
 
 # CORS — must list exact origins; never use CORS_ALLOW_ALL_ORIGINS=True in production
-CORS_ALLOWED_ORIGINS = os.environ.get(
-    'CORS_ALLOWED_ORIGINS', 'http://localhost:3000'
-).split(',')
+CORS_ALLOWED_ORIGINS = [
+    o.strip() for o in os.environ.get(
+        'CORS_ALLOWED_ORIGINS', 'http://localhost:3000'
+    ).split(',') if o.strip()
+]
+
+# Optionally allow Vercel preview deployments (e.g. https://*.vercel.app) without
+# listing each URL. Comma-separated regexes via CORS_ALLOWED_ORIGIN_REGEXES.
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r.strip() for r in os.environ.get('CORS_ALLOWED_ORIGIN_REGEXES', '').split(',') if r.strip()
+]
+
+# CSRF — required for the Django admin login over HTTPS and any cross-site POSTs.
+# Entries MUST include the scheme, e.g. https://your-backend.onrender.com
+CSRF_TRUSTED_ORIGINS = [
+    o.strip() for o in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if o.strip()
+]
 
 # CKEditor
 CKEDITOR_UPLOAD_PATH = 'uploads/'
@@ -298,3 +318,19 @@ CKEDITOR_CONFIGS = {
 }
 
 SILENCED_SYSTEM_CHECKS = ['ckeditor.W001']
+
+# ---------------------------------------------------------------------------
+# Production security hardening
+# Only active when DEBUG is off, so local development keeps working over HTTP.
+# Render terminates TLS at its proxy and forwards X-Forwarded-Proto, so Django
+# must trust that header to know the original request was HTTPS.
+# ---------------------------------------------------------------------------
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'True').lower() == 'true'
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '31536000'))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
