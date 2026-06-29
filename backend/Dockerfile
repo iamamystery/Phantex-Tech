@@ -17,6 +17,13 @@ COPY . .
 
 RUN mkdir -p /app/staticfiles /app/media /app/core/static
 
+# Collect static assets at build time (no DB needed; uses settings defaults).
+RUN python manage.py collectstatic --no-input
+
+RUN chmod +x /app/docker-entrypoint.sh
+
+# Koyeb provides $PORT; the entrypoint binds it (defaults to 8000 locally).
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
+# Runtime: migrate -> (optional) create superuser -> start gunicorn.
+CMD ["sh", "/app/docker-entrypoint.sh"]
