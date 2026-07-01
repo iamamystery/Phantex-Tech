@@ -1,13 +1,9 @@
 import type { Metadata } from 'next'
-import { getMembers, getPageSEO } from '@/lib/api'
+import { getPageSEO } from '@/lib/api'
 import { buildMetadata } from '@/components/seo/MetaTags'
 import FadeIn from '@/components/ui/FadeIn'
-import TechBadge from '@/components/ui/TechBadge'
 import OrganizationSchema from '@/components/seo/schemas/OrganizationSchema'
-import Image from 'next/image'
-import { getMediaUrl } from '@/lib/utils'
 import { MagicCard } from '@/components/magicui/magic-card'
-import type { Member } from '@/types'
 import TestimonialMarquee from '@/components/ui/TestimonialMarquee'
 import Link from 'next/link'
 
@@ -100,18 +96,25 @@ const REGIONS = [
   { name: 'MENA',     detail: 'UAE · Saudi Arabia · Egypt · Pakistan' },
 ]
 
+// Leadership — static by design (no CMS/avatar dependency): the two founders.
+const LEADERSHIP = [
+  {
+    number: '01',
+    name: 'Muhammad Jawad Ahmad',
+    role: 'Founder & Chief Executive Officer (CEO)',
+    bio: "Leads Phantex's vision, business strategy, product direction, AI initiatives, engineering leadership, client relationships, and long-term company growth. Oversees innovation across AI systems, automation, cybersecurity, and software engineering.",
+  },
+  {
+    number: '02',
+    name: 'Awais',
+    role: 'Co-Founder & Chief Technology Officer (CTO)',
+    bio: "Leads the company's technical architecture, software engineering standards, infrastructure, system scalability, backend development, DevOps, and engineering execution. Ensures every product is built with performance, reliability, and maintainability in mind.",
+  },
+]
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default async function AboutPage() {
-  let members: Member[] = []
-  try {
-    members = await getMembers()
-  } catch (error) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.error('Failed to fetch team members:', error)
-    }
-  }
-
+export default function AboutPage() {
   return (
     <main style={{ background: '#FAFAF8' }}>
       <OrganizationSchema />
@@ -372,152 +375,89 @@ export default async function AboutPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════════════
-          TEAM — retained from original, dark section
+          VISIONARY LEADERS — static founders section, dark, no avatars
       ════════════════════════════════════════════════════════════ */}
-      {members.length > 0 && (
-        <section
-          className="relative overflow-hidden"
-          style={{ background: '#0A0A0A', padding: 'clamp(4rem, 8vw, 8rem) 0' }}
-        >
-          {/* Ambient glows */}
-          <div
-            className="absolute top-0 left-1/4 w-96 h-96 rounded-full pointer-events-none"
-            style={{ background: 'rgba(245,158,11,0.06)', filter: 'blur(120px)' }}
-          />
-          <div
-            className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full pointer-events-none"
-            style={{ background: 'rgba(245,120,11,0.04)', filter: 'blur(120px)' }}
-          />
+      <section
+        className="relative overflow-hidden"
+        style={{ background: '#0A0A0A', padding: 'clamp(4rem, 8vw, 8rem) 0' }}
+      >
+        {/* Ambient glows */}
+        <div
+          className="absolute top-0 left-1/4 w-96 h-96 rounded-full pointer-events-none"
+          style={{ background: 'rgba(245,158,11,0.06)', filter: 'blur(120px)' }}
+        />
+        <div
+          className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full pointer-events-none"
+          style={{ background: 'rgba(245,120,11,0.04)', filter: 'blur(120px)' }}
+        />
 
-          <div className="relative z-10 max-w-7xl mx-auto px-6">
-            <FadeIn className="mb-14 text-center">
-              <span
-                className="font-mono font-bold uppercase block mb-4"
-                style={{ fontSize: '11px', letterSpacing: '0.35em', color: '#F59E0B' }}
-              >
-                The Team
-              </span>
-              <h2
-                className="font-display font-black text-white tracking-tight"
-                style={{ fontSize: 'clamp(32px, 4vw, 48px)' }}
-              >
-                Meet the engineers
-              </h2>
-            </FadeIn>
+        <div className="relative z-10 max-w-7xl mx-auto px-6">
+          <FadeIn className="mb-14 text-center">
+            <span
+              className="font-mono font-bold uppercase block mb-4"
+              style={{ fontSize: '11px', letterSpacing: '0.35em', color: '#F59E0B' }}
+            >
+              Leadership
+            </span>
+            <h2
+              className="font-display font-black text-white tracking-tight"
+              style={{ fontSize: 'clamp(32px, 4vw, 48px)' }}
+            >
+              Visionary Leaders
+            </h2>
+          </FadeIn>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {members.map((member, i) => {
-                const avatarUrl = getMediaUrl(member.avatar)
-                return (
-                  <FadeIn key={member.name} delay={i * 0.1}>
-                    <MagicCard
-                      className="p-10 flex flex-col items-center h-[580px] text-center border-none bg-stone-900/40 backdrop-blur-xl"
-                      gradientFrom="#FEF3C7"
-                      gradientTo="#D97706"
-                      gradientSize={350}
-                    >
-                      {/* Avatar */}
-                      <div className="relative w-24 h-24 rounded-2xl overflow-hidden mb-7 shadow-2xl ring-2 ring-white/10">
-                        {avatarUrl ? (
-                          <Image src={avatarUrl} alt={member.name} fill className="object-cover" />
-                        ) : (
-                          <div
-                            className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-stone-800 to-stone-900"
-                            style={{ color: 'rgba(245,158,11,0.4)' }}
-                          >
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {LEADERSHIP.map((leader, i) => (
+              <FadeIn key={leader.name} delay={i * 0.1} className="h-full">
+                <MagicCard
+                  className="h-full p-10 flex flex-col border-none bg-stone-900/40 backdrop-blur-xl"
+                  gradientFrom="#FEF3C7"
+                  gradientTo="#D97706"
+                  gradientSize={350}
+                >
+                  {/* Number — structural accent, not a photo */}
+                  <span
+                    className="font-mono font-bold block mb-6"
+                    style={{ fontSize: '11px', letterSpacing: '0.2em', color: 'rgba(245,158,11,0.35)' }}
+                  >
+                    {leader.number}
+                  </span>
 
-                      {/* Name */}
-                      <h3
-                        className="font-display font-black text-white tracking-tight mb-2"
-                        style={{ fontSize: '22px' }}
-                      >
-                        {member.name}
-                      </h3>
+                  {/* Name */}
+                  <h3
+                    className="font-display font-black text-white tracking-tight mb-3"
+                    style={{ fontSize: '24px' }}
+                  >
+                    {leader.name}
+                  </h3>
 
-                      {/* Role badge */}
-                      <p
-                        className="font-mono font-bold uppercase mb-6 px-4 py-1.5 rounded-full inline-block"
-                        style={{
-                          fontSize: '10px', letterSpacing: '0.35em',
-                          color: '#FDE68A',
-                          background: 'rgba(245,158,11,0.12)',
-                          border: '1px solid rgba(245,158,11,0.20)',
-                        }}
-                      >
-                        {member.role}
-                      </p>
+                  {/* Role badge */}
+                  <p
+                    className="font-mono font-bold uppercase mb-6 px-4 py-1.5 rounded-full self-start"
+                    style={{
+                      fontSize: '10px', letterSpacing: '0.3em',
+                      color: '#FDE68A',
+                      background: 'rgba(245,158,11,0.12)',
+                      border: '1px solid rgba(245,158,11,0.20)',
+                    }}
+                  >
+                    {leader.role}
+                  </p>
 
-                      {/* Bio */}
-                      <p
-                        className="font-body text-sm leading-relaxed mb-8 max-w-[260px] mx-auto line-clamp-3"
-                        style={{ color: 'rgba(255,255,255,0.55)' }}
-                      >
-                        {member.bio}
-                      </p>
-
-                      {/* Social links */}
-                      <div className="flex items-center justify-center gap-4 mb-8">
-                        {member.linkedin && (
-                          <a
-                            href={member.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors duration-200"
-                            style={{
-                              background: 'rgba(255,255,255,0.05)',
-                              border: '1px solid rgba(255,255,255,0.10)',
-                              color: 'rgba(245,158,11,0.6)',
-                            }}
-                          >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                            </svg>
-                          </a>
-                        )}
-                        {member.github && (
-                          <a
-                            href={member.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors duration-200"
-                            style={{
-                              background: 'rgba(255,255,255,0.05)',
-                              border: '1px solid rgba(255,255,255,0.10)',
-                              color: 'rgba(245,158,11,0.6)',
-                            }}
-                          >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-                            </svg>
-                          </a>
-                        )}
-                      </div>
-
-                      {/* Skills */}
-                      <div
-                        className="mt-auto pt-6 w-full"
-                        style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
-                      >
-                        <div className="flex flex-wrap justify-center gap-2 px-1 max-h-[80px] overflow-hidden">
-                          {member.skills.map((skill: string) => (
-                            <TechBadge key={skill} name={skill} />
-                          ))}
-                        </div>
-                      </div>
-                    </MagicCard>
-                  </FadeIn>
-                )
-              })}
-            </div>
+                  {/* Description */}
+                  <p
+                    className="font-body leading-relaxed"
+                    style={{ fontSize: '15px', color: 'rgba(255,255,255,0.6)' }}
+                  >
+                    {leader.bio}
+                  </p>
+                </MagicCard>
+              </FadeIn>
+            ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* ════════════════════════════════════════════════════════════
           5 · GLOBAL BY DESIGN — two-column split

@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
-import { CORE_FACTS, retrieveContext } from '@/lib/ai/knowledge'
+import { CORE_FACTS, formatDoc, retrieveDocs } from '@/lib/ai/knowledge'
+import { formatSitePagesForPrompt } from '@/lib/ai/pages'
+import { parseAIResponse } from '@/lib/ai/parseAIResponse'
 
 export const runtime = 'nodejs'
 
@@ -10,6 +12,13 @@ export const runtime = 'nodejs'
 // the website knowledge layer (lib/ai/knowledge) and ground the model on it, so
 // the assistant answers from the site's actual projects / case studies / blog /
 // resources instead of a frozen prompt. Calls Groq's OpenAI-compatible API.
+//
+// Structured output: the model is asked to return `{ message, actions? }` JSON
+// (see lib/ai/types.ts) instead of plain text, so the frontend can render
+// clickable navigation buttons whenever the assistant references an internal
+// page — no plain-text URL parsing. parseAIResponse validates every action's
+// url against the known site pages + this turn's retrieved content before it
+// ever reaches the client.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions'
@@ -29,6 +38,17 @@ ${CORE_FACTS}
 RETRIEVED CONTEXT (from the website — your primary source for this question):
 ${context || '(no specific page matched this question)'}
 
+RESPONSE FORMAT (strict — always follow this):
+Respond with ONLY a single valid JSON object — no prose before or after it, no markdown code fences. It must match this shape:
+
+{ "message": string, "actions"?: { "label": string, "url": string }[] }
+
+- "message": your full answer, written in Markdown, following the tone/scope rules below.
+- "actions": an optional array of 0–3 navigation buttons. Attach one whenever your answer touches a topic covered by a page on the site — even if the user didn't explicitly ask for that page. Never attach an action to the home page ("/"). Never invent a url: only use one of the SUPPORTED PAGES below, or a url copied exactly from an item in RETRIEVED CONTEXT (use its own title as the basis for the label, e.g. "View Case Study", "Read Article", "View Project"). Omit "actions" entirely if nothing relevant applies.
+
+SUPPORTED PAGES:
+${formatSitePagesForPrompt()}
+
 SCOPE & RESPONSE POLICY (very important):
 You are NOT a general-purpose AI assistant and must not behave like ChatGPT. You exist only to help visitors understand Phantex Tech — its services, expertise, portfolio, case studies, blog, leadership, technologies, process, pricing, and how the company can solve their business problems.
 
@@ -43,10 +63,11 @@ When a request is out of scope, do NOT fulfill it. Never say "I can't" and never
 RULES:
 - Ground every answer in the CORE FACTS and CONTEXT above. Treat them as the source of truth.
 - If the answer is not in the CORE FACTS or CONTEXT, politely say the information is not publicly available — never invent projects, features, technologies, case studies, pricing, leadership, or pages.
-- When you reference a project, article, or resource, you may mention its page path so the user can find it.
+- When you reference a project, article, resource, or any page from SUPPORTED PAGES, attach it as an action instead of writing its raw url or path in "message" — the button already gives the user a place to click.
 - Tone: friendly, professional, confident, helpful, technical, modern, clear, and concise. Avoid hype and exaggerated marketing language.
 - Do not discuss competitors, politics, or anything unrelated to Phantex Tech.
-- Keep responses under ~120 words unless the user asks for more detail.`
+- Keep "message" under ~120 words unless the user asks for more detail.
+- Output raw JSON only — never wrap it in \`\`\`json fences, never add commentary outside the object.`
 }
 
 export async function POST(request: Request) {
@@ -87,8 +108,11 @@ export async function POST(request: Request) {
         .map((m) => ({ role: m.role, content: m.content.slice(0, 2000) }))
     : []
 
-  // Retrieve relevant website content for this turn
-  const context = retrieveContext(message)
+  // Retrieve relevant website content for this turn — the docs' urls double as
+  // the allowlist for any "actions" the model attaches to its reply.
+  const docs = retrieveDocs(message)
+  const context = docs.map(formatDoc).join('\n\n')
+  const contextUrls = docs.map((d) => d.url).filter((u): u is string => !!u)
 
   const messages = [
     { role: 'system', content: buildSystemPrompt(context) },
@@ -107,7 +131,8 @@ export async function POST(request: Request) {
         model: MODEL,
         messages,
         temperature: 0.4,
-        max_tokens: 600,
+        max_tokens: 700,
+        response_format: { type: 'json_object' },
       }),
     })
 
@@ -121,8 +146,8 @@ export async function POST(request: Request) {
     }
 
     const data = await res.json()
-    const reply = data?.choices?.[0]?.message?.content?.trim()
-    if (!reply) {
+    const raw = data?.choices?.[0]?.message?.content?.trim()
+    if (!raw) {
       console.error('[chat] Empty completion from Groq.')
       return NextResponse.json(
         { error: 'The assistant returned an empty response. Please try again.' },
@@ -130,7 +155,9 @@ export async function POST(request: Request) {
       )
     }
 
-    return NextResponse.json({ reply, session_id: body.session_id ?? null }, { status: 200 })
+    const { message: reply, actions } = parseAIResponse(raw, contextUrls)
+
+    return NextResponse.json({ reply, actions, session_id: body.session_id ?? null }, { status: 200 })
   } catch (err) {
     console.error('[chat] Failed to reach Groq:', err)
     return NextResponse.json(

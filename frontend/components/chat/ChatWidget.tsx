@@ -2,10 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import ActionButtons from "./ActionButtons";
+import type { ChatAction } from "@/lib/ai/types";
 
 interface Message {
   role: "user" | "assistant";
   content: string;
+  actions?: ChatAction[];
 }
 
 export default function ChatWidget() {
@@ -45,9 +48,10 @@ export default function ChatWidget() {
         body: JSON.stringify({ session_id: sessionId, message: text, history: messages.slice(-10) }),
       });
       const data = await res.json();
+      const actions: ChatAction[] | undefined = Array.isArray(data?.actions) ? data.actions : undefined;
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.reply },
+        { role: "assistant", content: data.reply, actions },
       ]);
     } catch {
       setMessages((prev) => [
@@ -119,6 +123,7 @@ export default function ChatWidget() {
                   }`}
                 >
                   {msg.content}
+                  {msg.role === "assistant" && <ActionButtons actions={msg.actions} />}
                 </div>
               </div>
             ))}

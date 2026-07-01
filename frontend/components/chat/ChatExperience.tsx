@@ -10,6 +10,8 @@ import {
 } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import ChatMarkdown from './ChatMarkdown'
+import ActionButtons from './ActionButtons'
+import type { ChatAction } from '@/lib/ai/types'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Phantex AI — the /chat workspace. A fully functional premium chat experience
@@ -23,6 +25,7 @@ import ChatMarkdown from './ChatMarkdown'
 interface Message {
   role: 'user' | 'assistant'
   content: string
+  actions?: ChatAction[]
 }
 
 const STORAGE_KEY = 'phantex-chat-session'
@@ -126,7 +129,14 @@ const MessageBubble = memo(function MessageBubble({
             : 'max-w-[88%] rounded-2xl rounded-bl-md border border-[#E7E5E4] bg-white px-4 py-3 shadow-sm'
         }
       >
-        {isUser ? message.content : <ChatMarkdown content={message.content} />}
+        {isUser ? (
+          message.content
+        ) : (
+          <>
+            <ChatMarkdown content={message.content} />
+            <ActionButtons actions={message.actions} />
+          </>
+        )}
       </div>
     </motion.div>
   )
@@ -248,11 +258,12 @@ export default function ChatExperience() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data = await res.json()
         const reply = (data?.reply ?? '').toString().trim()
+        const actions: ChatAction[] | undefined = Array.isArray(data?.actions) ? data.actions : undefined
         setLoading(false)
         if (!reply) throw new Error('empty reply')
 
         await revealReply(reply)
-        setMessages((prev) => [...prev, { role: 'assistant', content: reply }])
+        setMessages((prev) => [...prev, { role: 'assistant', content: reply, actions }])
         setStreaming(false)
         setStreamingText('')
       } catch {
