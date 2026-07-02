@@ -479,9 +479,9 @@ export default function ChatExperience() {
                     <div className="flex justify-start gap-3">
                       <Avatar />
                       <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-[#E7E5E4] bg-white px-4 py-3.5 shadow-sm">
-                        <span className="h-2 w-2 animate-bounce rounded-full bg-amber-400 [animation-delay:0ms]" />
-                        <span className="h-2 w-2 animate-bounce rounded-full bg-amber-400 [animation-delay:150ms]" />
-                        <span className="h-2 w-2 animate-bounce rounded-full bg-amber-400 [animation-delay:300ms]" />
+                        <span className="h-2 w-2 motion-safe:animate-bounce rounded-full bg-amber-400 [animation-delay:0ms]" />
+                        <span className="h-2 w-2 motion-safe:animate-bounce rounded-full bg-amber-400 [animation-delay:150ms]" />
+                        <span className="h-2 w-2 motion-safe:animate-bounce rounded-full bg-amber-400 [animation-delay:300ms]" />
                       </div>
                     </div>
                   )}

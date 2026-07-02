@@ -7,6 +7,7 @@ import FadeIn from '@/components/ui/FadeIn'
 import ArticleCard from '@/components/blog/ArticleCard'
 import WhyPhantex from '@/components/blog/WhyPhantex'
 import type { ArticleSummary, BlogCategory } from '@/content/types'
+import { staggerDelay } from '@/lib/motion'
 
 // ─── Prop shapes (slim DTOs kept out of the article bodies) ────────────────────
 
@@ -332,7 +333,7 @@ export default function BlogPageContent({
             </FadeIn>
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               {editorsPicks.map((a, i) => (
-                <FadeIn key={a.slug} delay={i * 0.08}>
+                <FadeIn key={a.slug} delay={staggerDelay(i)}>
                   <Link href={`/blog/${a.slug}`} className="group relative flex h-full flex-col overflow-hidden" style={{ background: '#0C0C0C', borderRadius: '20px', padding: '2rem', minHeight: '260px' }}>
                     <div className="pointer-events-none absolute inset-0 rounded-[20px] opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ boxShadow: 'inset 0 0 0 1.5px rgba(245,158,11,0.35)' }} />
                     <div className="relative z-10 flex flex-grow flex-col">
@@ -370,7 +371,7 @@ export default function BlogPageContent({
             </FadeIn>
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               {caseStudies.map((cs, i) => (
-                <FadeIn key={cs.slug} delay={i * 0.08}>
+                <FadeIn key={cs.slug} delay={staggerDelay(i)}>
                   <Link href={`/blog/case-studies/${cs.slug}`} className="group block h-full transition-all duration-300 hover:-translate-y-1 hover:border-amber-200 hover:shadow-[0_16px_40px_rgba(0,0,0,0.10)]" style={{ background: '#FFFFFF', border: '1px solid #EDEAE4', borderRadius: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', padding: '2rem' }}>
                     <div className="mb-6 flex items-center justify-between">
                       <span className="rounded-full px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.3em]" style={{ background: 'rgba(245,158,11,0.08)', color: '#F59E0B', border: '1px solid rgba(245,158,11,0.15)' }}>{cs.tag}</span>
@@ -406,7 +407,7 @@ export default function BlogPageContent({
             </FadeIn>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {resources.map((r, i) => (
-                <FadeIn key={r.slug} delay={i * 0.07}>
+                <FadeIn key={r.slug} delay={staggerDelay(i)}>
                   <Link href={`/resources/${r.slug}`} className="group flex h-full flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.10)]" style={{ background: '#FFFFFF', border: '1px solid #EDEAE4', borderRadius: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', padding: '1.75rem' }}>
                     <div className="mb-5 flex items-center justify-center" style={{ width: '44px', height: '44px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.15)', borderRadius: '12px', color: '#F59E0B' }}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
@@ -438,7 +439,7 @@ export default function BlogPageContent({
             </FadeIn>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {authors.map((author, i) => (
-                <FadeIn key={author.slug} delay={i * 0.08}>
+                <FadeIn key={author.slug} delay={staggerDelay(i)}>
                   <Link href={`/blog/author/${author.slug}`} className="flex h-full flex-col transition-all duration-300 hover:-translate-y-1" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '20px', padding: '1.75rem' }}>
                     <div className="mb-5 flex items-center gap-4">
                       <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl font-display text-[16px] font-black text-amber-400" style={{ background: 'rgba(245,158,11,0.10)', border: '1px solid rgba(245,158,11,0.20)' }}>{author.initials}</div>

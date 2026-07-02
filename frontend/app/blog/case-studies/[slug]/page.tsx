@@ -128,7 +128,7 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
           <h2 className="mb-8 font-display text-2xl font-black text-[#111111]">More case studies</h2>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             {others.map((o) => (
-              <Link key={o.slug} href={`/blog/case-studies/${o.slug}`} className="group flex flex-col rounded-2xl bg-white p-7 transition-all hover:-translate-y-1 hover:border-amber-200 hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)]" style={{ border: '1px solid #EDEAE4' }}>
+              <Link key={o.slug} href={`/blog/case-studies/${o.slug}`} className="group flex flex-col rounded-2xl bg-white p-7 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-amber-200 hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)]" style={{ border: '1px solid #EDEAE4' }}>
                 <div className="mb-4 flex items-center justify-between">
                   <span className="rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.25em]" style={{ background: 'rgba(245,158,11,0.08)', color: '#F59E0B', border: '1px solid rgba(245,158,11,0.15)' }}>{o.tag}</span>
                   <span className="font-display text-2xl font-black text-[#111111]">{o.metric}</span>

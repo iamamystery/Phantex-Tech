@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import FadeIn from '@/components/ui/FadeIn'
 import AmbientBackground from '@/components/home/AmbientBackground'
+import { staggerDelay } from '@/lib/motion'
 
 /* ─── Project data ───────────────────────────────────────────────── */
 
@@ -160,7 +161,7 @@ function FeaturedCard() {
 /* ─── Secondary card ─────────────────────────────────────────────── */
 function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: number }) {
   return (
-    <FadeIn delay={index * 0.07} className="h-full">
+    <FadeIn delay={staggerDelay(index)} className="h-full">
       <div className="group relative h-full bg-white rounded-2xl border flex flex-col p-7 transition-all duration-300 ease-out hover:-translate-y-1"
         style={{ borderColor: '#EDEAE4', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
 

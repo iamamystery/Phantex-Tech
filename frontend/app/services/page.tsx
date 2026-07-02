@@ -7,6 +7,7 @@ import ServiceSchema from '@/components/seo/schemas/ServiceSchema'
 import TestimonialMarquee from '@/components/ui/TestimonialMarquee'
 import Link from 'next/link'
 import HowWeWork from '@/components/services/HowWeWork'
+import { staggerDelay } from '@/lib/motion'
 
 export const revalidate = 0
 
@@ -220,7 +221,7 @@ export default async function ServicesPage() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
           {SERVICES.map((service, i) => (
-            <FadeIn key={service.slug} delay={i * 0.08}>
+            <FadeIn key={service.slug} delay={staggerDelay(i)}>
               <Link
                 href={`/services/${service.slug}`}
                 className="group relative block w-full p-6 rounded-3xl bg-stone-50 dark:bg-[#0c0c0c] border border-stone-200 dark:border-white/[0.06] transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:shadow-xl hover:shadow-amber-500/5 overflow-hidden"

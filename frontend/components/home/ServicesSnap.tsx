@@ -1,10 +1,11 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
+import { motion, useMotionTemplate, useMotionValue, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import FadeIn from '@/components/ui/FadeIn'
 import AmbientBackground from '@/components/home/AmbientBackground'
+import { DURATION, EASE_PREMIUM, staggerDelay } from '@/lib/motion'
 
 /* ─── Types ───────────────────────────────────────────────────── */
 interface ServiceItem {
@@ -112,6 +113,7 @@ function ServiceCard({
 }) {
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
+  const reduced = useReducedMotion()
 
   function onMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -124,11 +126,11 @@ function ServiceCard({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: reduced ? 0 : 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -6, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
+      transition={{ duration: reduced ? 0.2 : DURATION.slow, delay: reduced ? 0 : staggerDelay(index), ease: EASE_PREMIUM }}
+      whileHover={reduced ? undefined : { y: -6, transition: { duration: DURATION.base, ease: EASE_PREMIUM } }}
     >
       <Link
         href={service.href}
@@ -253,13 +255,14 @@ function ServiceCard({
 
 /* ─── CTA card (bento slot) ───────────────────────────────────── */
 function CTACard() {
+  const reduced = useReducedMotion()
   return (
     <motion.div
       className="col-span-6 md:col-span-3"
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: reduced ? 0 : 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: reduced ? 0.2 : DURATION.slow, delay: reduced ? 0 : 0.5, ease: EASE_PREMIUM }}
     >
       <div
         className="relative h-full rounded-[22px] overflow-hidden flex flex-col items-start justify-between p-8"

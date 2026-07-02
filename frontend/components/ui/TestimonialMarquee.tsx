@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { DURATION, EASE_PREMIUM, staggerDelay } from '@/lib/motion'
 
 /* ─── Rotating headline words ────────────────────────────────────── */
 const WORDS = ['speak', 'scale', 'deliver', 'convert', 'compound']
@@ -9,11 +10,13 @@ const WORDS = ['speak', 'scale', 'deliver', 'convert', 'compound']
 /* ─── Isolated rotating word — only THIS re-renders on each tick ─── */
 function RotatingWord() {
   const [index, setIndex] = useState(0)
+  const reduced = useReducedMotion()
 
   useEffect(() => {
+    if (reduced) return
     const id = setInterval(() => setIndex(i => (i + 1) % WORDS.length), 3500)
     return () => clearInterval(id)
-  }, [])
+  }, [reduced])
 
   return (
     <span className="relative inline-block text-amber-400" style={{ verticalAlign: 'bottom' }}>
@@ -128,16 +131,18 @@ function Avatar({ initial, dark = false }: { initial: string; dark?: boolean }) 
 
 /* ─── Section ────────────────────────────────────────────────────── */
 export default function TestimonialMarquee() {
+  const reduced = useReducedMotion()
+
   return (
     <section className="w-full py-28 bg-[var(--bg-primary)]">
       <div className="max-w-7xl mx-auto px-6">
 
         {/* ── Header ── */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: reduced ? 0 : 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: reduced ? 0.2 : DURATION.slow, ease: EASE_PREMIUM }}
           className="mb-16"
         >
           <span className="font-mono text-[11px] uppercase tracking-[0.35em] text-amber-500 font-bold block mb-4">
@@ -153,10 +158,10 @@ export default function TestimonialMarquee() {
 
         {/* ── Featured card ── */}
         <motion.div
-          initial={{ opacity: 0, y: 32 }}
+          initial={{ opacity: 0, y: reduced ? 0 : 32 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.65, ease: 'easeOut', delay: 0.1 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: reduced ? 0.2 : 0.65, ease: EASE_PREMIUM, delay: reduced ? 0 : 0.1 }}
           className="mb-6"
         >
           <div
@@ -221,13 +226,13 @@ export default function TestimonialMarquee() {
           {SECONDARIES.map((t, i) => (
             <motion.div
               key={t.name}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: reduced ? 0 : 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.07 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: reduced ? 0.2 : DURATION.medium, ease: EASE_PREMIUM, delay: reduced ? 0 : staggerDelay(i) }}
             >
               <div
-                className="h-full p-7 rounded-2xl border transition-all duration-300 group"
+                className="h-full p-7 rounded-2xl border transition-all duration-300 ease-out group"
                 style={{
                   background: '#FFFFFF',
                   borderColor: '#EDEAE4',
@@ -272,10 +277,10 @@ export default function TestimonialMarquee() {
 
         {/* ── Stats bar ── */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: reduced ? 0 : 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: reduced ? 0.2 : DURATION.slow, ease: EASE_PREMIUM }}
           className="grid grid-cols-2 md:grid-cols-4 rounded-2xl overflow-hidden"
           style={{ border: '1px solid #EDEAE4' }}
         >

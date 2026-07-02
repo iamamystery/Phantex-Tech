@@ -6,6 +6,7 @@ import FadeIn from '@/components/ui/FadeIn'
 import BreadcrumbSchema from '@/components/seo/schemas/BreadcrumbSchema'
 import TestimonialMarquee from '@/components/ui/TestimonialMarquee'
 import { FEATURED_PROJECT, PROJECTS } from '@/components/home/FeaturedWork'
+import { staggerDelay } from '@/lib/motion'
 
 export const revalidate = 0
 
@@ -124,7 +125,7 @@ function FeaturedCard() {
 /* ─── Secondary project card ─────────────────────────────────────── */
 function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: number }) {
   return (
-    <FadeIn delay={index * 0.07} className="h-full">
+    <FadeIn delay={staggerDelay(index)} className="h-full">
       <div className="group relative h-full bg-white rounded-2xl border flex flex-col p-8 transition-all duration-200"
         style={{ borderColor: '#EDEAE4', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
 

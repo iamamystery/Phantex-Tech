@@ -1,6 +1,7 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
+import { DURATION, EASE_PREMIUM } from '@/lib/motion'
 
 interface GlassCardProps {
   children: React.ReactNode
@@ -8,14 +9,16 @@ interface GlassCardProps {
   animate?: boolean
 }
 
-const GLASS_CLASSES = 'glass-effect transition-all duration-300'
+const GLASS_CLASSES = 'glass-effect transition-all duration-300 ease-out'
 
 export default function GlassCard({
   children,
   className = '',
   animate = true,
 }: GlassCardProps) {
-  if (!animate) {
+  const reduced = useReducedMotion()
+
+  if (!animate || reduced) {
     return (
       <div className={`${GLASS_CLASSES} ${className}`}>
         {children}
@@ -26,7 +29,7 @@ export default function GlassCard({
   return (
     <motion.div
       className={`${GLASS_CLASSES} ${className}`}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      whileHover={{ y: -4, transition: { duration: DURATION.fast, ease: EASE_PREMIUM } }}
     >
       {children}
     </motion.div>

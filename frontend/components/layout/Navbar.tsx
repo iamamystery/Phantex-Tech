@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { socialLinks } from '@/lib/social'
+import { EASE_PREMIUM_CSS } from '@/lib/motion'
 
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
@@ -77,7 +78,7 @@ export default function Navbar() {
         style={{
           borderRadius: '999px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.4)',
-          transition: 'max-width 0.55s cubic-bezier(0.22, 1, 0.36, 1), height 0.55s cubic-bezier(0.22, 1, 0.36, 1)',
+          transition: `max-width 0.55s ${EASE_PREMIUM_CSS}, height 0.55s ${EASE_PREMIUM_CSS}`,
         }}
       >
         {/* Shimmer line */}
@@ -91,7 +92,7 @@ export default function Navbar() {
             style={{
               marginLeft: isCollapsed ? 'auto' : undefined,
               marginRight: isCollapsed ? 'auto' : '2rem',
-              transition: 'margin 0.55s cubic-bezier(0.22, 1, 0.36, 1)',
+              transition: `margin 0.55s ${EASE_PREMIUM_CSS}`,
             }}
           >
             Phan<span className="text-amber-400">tex</span>
@@ -108,8 +109,8 @@ export default function Navbar() {
               // Collapse: content fades out FIRST (fast, no delay)
               // Expand: content fades in AFTER pill has grown (delayed)
               transition: isCollapsed
-                ? 'opacity 0.2s ease, transform 0.2s ease, width 0.3s ease'
-                : 'opacity 0.35s ease 0.2s, transform 0.35s ease 0.2s, width 0.55s cubic-bezier(0.22, 1, 0.36, 1)',
+                ? `opacity 0.2s ${EASE_PREMIUM_CSS}, transform 0.2s ${EASE_PREMIUM_CSS}, width 0.3s ${EASE_PREMIUM_CSS}`
+                : `opacity 0.35s ${EASE_PREMIUM_CSS} 0.2s, transform 0.35s ${EASE_PREMIUM_CSS} 0.2s, width 0.55s ${EASE_PREMIUM_CSS}`,
             }}
           >
             {/* Nav Links */}

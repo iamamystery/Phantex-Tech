@@ -3,9 +3,9 @@ import { getPageSEO } from '@/lib/api'
 import { buildMetadata } from '@/components/seo/MetaTags'
 import FadeIn from '@/components/ui/FadeIn'
 import OrganizationSchema from '@/components/seo/schemas/OrganizationSchema'
-import { MagicCard } from '@/components/magicui/magic-card'
 import TestimonialMarquee from '@/components/ui/TestimonialMarquee'
 import Link from 'next/link'
+import { staggerDelay } from '@/lib/motion'
 
 export const revalidate = 0
 
@@ -99,16 +99,16 @@ const REGIONS = [
 // Leadership — static by design (no CMS/avatar dependency): the two founders.
 const LEADERSHIP = [
   {
-    number: '01',
     name: 'Muhammad Jawad Ahmad',
-    role: 'Founder & Chief Executive Officer (CEO)',
-    bio: "Leads Phantex's vision, business strategy, product direction, AI initiatives, engineering leadership, client relationships, and long-term company growth. Oversees innovation across AI systems, automation, cybersecurity, and software engineering.",
+    title: 'Founder & Chief Executive Officer',
+    bio: "Leads Phantex's vision, business strategy, AI initiatives, product direction, engineering leadership, cybersecurity practice, client partnerships and long-term company growth. Drives innovation across intelligent software systems and scalable automation solutions.",
+    expertise: ['AI Engineering', 'Automation', 'Cybersecurity', 'Product Strategy'],
   },
   {
-    number: '02',
     name: 'Awais',
-    role: 'Co-Founder & Chief Technology Officer (CTO)',
-    bio: "Leads the company's technical architecture, software engineering standards, infrastructure, system scalability, backend development, DevOps, and engineering execution. Ensures every product is built with performance, reliability, and maintainability in mind.",
+    title: 'Co-Founder & Chief Technology Officer',
+    bio: 'Leads technical architecture, backend engineering, cloud infrastructure, DevOps, platform reliability and software quality. Oversees the delivery of secure, scalable and high-performance systems across all Phantex products.',
+    expertise: ['Backend Engineering', 'Cloud Infrastructure', 'DevOps', 'System Architecture'],
   },
 ]
 
@@ -251,7 +251,7 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {CAPABILITIES.map(({ title, items, icon }, i) => (
-              <FadeIn key={title} delay={i * 0.08}>
+              <FadeIn key={title} delay={staggerDelay(i)}>
                 {/* Card — Testimonials secondary card pattern + hover */}
                 <div
                   className="h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.07)] hover:border-amber-300/60"
@@ -334,7 +334,7 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {PHILOSOPHY.map(({ number, title, body }, i) => (
-              <FadeIn key={title} delay={i * 0.08}>
+              <FadeIn key={title} delay={staggerDelay(i)}>
                 <div
                   className="h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.07)]"
                   style={{
@@ -375,11 +375,11 @@ export default function AboutPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════════════
-          VISIONARY LEADERS — static founders section, dark, no avatars
+          LEADERSHIP TEAM — static founders section, dark glass cards
       ════════════════════════════════════════════════════════════ */}
       <section
         className="relative overflow-hidden"
-        style={{ background: '#0A0A0A', padding: 'clamp(4rem, 8vw, 8rem) 0' }}
+        style={{ background: '#0A0A0A', padding: 'clamp(5rem, 9vw, 9rem) 0' }}
       >
         {/* Ambient glows */}
         <div
@@ -392,7 +392,7 @@ export default function AboutPage() {
         />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6">
-          <FadeIn className="mb-14 text-center">
+          <FadeIn className="mb-16 text-center">
             <span
               className="font-mono font-bold uppercase block mb-4"
               style={{ fontSize: '11px', letterSpacing: '0.35em', color: '#F59E0B' }}
@@ -403,56 +403,90 @@ export default function AboutPage() {
               className="font-display font-black text-white tracking-tight"
               style={{ fontSize: 'clamp(32px, 4vw, 48px)' }}
             >
-              Visionary Leaders
+              Leadership Team
             </h2>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
             {LEADERSHIP.map((leader, i) => (
-              <FadeIn key={leader.name} delay={i * 0.1} className="h-full">
-                <MagicCard
-                  className="h-full p-10 flex flex-col border-none bg-stone-900/40 backdrop-blur-xl"
-                  gradientFrom="#FEF3C7"
-                  gradientTo="#D97706"
-                  gradientSize={350}
+              <FadeIn key={leader.name} delay={staggerDelay(i)} className="h-full">
+                <div
+                  className="group relative h-full overflow-hidden transition-all duration-[250ms] ease-out hover:-translate-y-1.5"
+                  style={{
+                    borderRadius: '24px',
+                    background: 'rgba(255,255,255,0.035)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    boxShadow: '0 20px 50px -24px rgba(0,0,0,0.6)',
+                  }}
                 >
-                  {/* Number — structural accent, not a photo */}
-                  <span
-                    className="font-mono font-bold block mb-6"
-                    style={{ fontSize: '11px', letterSpacing: '0.2em', color: 'rgba(245,158,11,0.35)' }}
-                  >
-                    {leader.number}
-                  </span>
-
-                  {/* Name */}
-                  <h3
-                    className="font-display font-black text-white tracking-tight mb-3"
-                    style={{ fontSize: '24px' }}
-                  >
-                    {leader.name}
-                  </h3>
-
-                  {/* Role badge */}
-                  <p
-                    className="font-mono font-bold uppercase mb-6 px-4 py-1.5 rounded-full self-start"
+                  {/* Hairline gold accent — top edge only, very subtle */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                    style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.5), transparent)' }}
+                  />
+                  {/* Border glow on hover */}
+                  <div
+                    className="absolute inset-0 rounded-[24px] pointer-events-none opacity-0 transition-opacity duration-[250ms] ease-out group-hover:opacity-100"
                     style={{
-                      fontSize: '10px', letterSpacing: '0.3em',
-                      color: '#FDE68A',
-                      background: 'rgba(245,158,11,0.12)',
-                      border: '1px solid rgba(245,158,11,0.20)',
+                      boxShadow: '0 0 0 1px rgba(245,158,11,0.28), 0 24px 60px -20px rgba(245,158,11,0.12)',
                     }}
-                  >
-                    {leader.role}
-                  </p>
+                  />
 
-                  {/* Description */}
-                  <p
-                    className="font-body leading-relaxed"
-                    style={{ fontSize: '15px', color: 'rgba(255,255,255,0.6)' }}
-                  >
-                    {leader.bio}
-                  </p>
-                </MagicCard>
+                  <div className="relative flex h-full flex-col p-9 sm:p-10">
+                    {/* Name */}
+                    <h3
+                      className="font-display font-black text-white tracking-tight"
+                      style={{ fontSize: 'clamp(22px, 2.4vw, 26px)' }}
+                    >
+                      {leader.name}
+                    </h3>
+
+                    {/* Title */}
+                    <p
+                      className="font-body font-medium mt-2 mb-6"
+                      style={{ fontSize: '14.5px', color: 'rgba(245,158,11,0.85)' }}
+                    >
+                      {leader.title}
+                    </p>
+
+                    {/* Description */}
+                    <p
+                      className="font-body leading-relaxed"
+                      style={{ fontSize: '15px', color: 'rgba(255,255,255,0.62)' }}
+                    >
+                      {leader.bio}
+                    </p>
+
+                    {/* Divider */}
+                    <div
+                      className="mt-8 mb-5"
+                      style={{ height: '1px', background: 'rgba(255,255,255,0.08)' }}
+                    />
+
+                    {/* Expertise chips */}
+                    <div className="flex flex-wrap gap-2 mt-auto">
+                      {leader.expertise.map((skill) => (
+                        <span
+                          key={skill}
+                          className="font-mono"
+                          style={{
+                            fontSize: '11px',
+                            letterSpacing: '0.03em',
+                            color: 'rgba(245,158,11,0.75)',
+                            background: 'rgba(245,158,11,0.06)',
+                            border: '1px solid rgba(245,158,11,0.16)',
+                            borderRadius: '8px',
+                            padding: '5px 10px',
+                          }}
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </FadeIn>
             ))}
           </div>

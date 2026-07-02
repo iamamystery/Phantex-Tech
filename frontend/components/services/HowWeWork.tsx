@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, useEffect, useEffect as ReactUseEffect } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import { MagicCard } from '@/components/magicui/magic-card'
 import { HowWeWorkSettings, WorkProcessStep } from '@/types'
 
@@ -94,25 +94,34 @@ function ProcessCard({
   total,
   active,
   state, // "active", "above", "below"
+  reduced = false,
 }: {
   step: WorkProcessStep
   total: number
   active: boolean
   state: "active" | "above" | "below"
+  reduced?: boolean
 }) {
   const litCount = parseInt(step.phase_number)
   const [mounted, setMounted] = useState(false)
-  
+
   ReactUseEffect(() => {
     setMounted(true)
   }, [])
 
-  // Ultra-smooth, elegant 3D deck transitions to match isolated snapped scroll glide
-  const variants = {
-    active: { rotateX: 0, y: 0, z: 0, scale: 1, opacity: 1, zIndex: 10, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
-    above:  { rotateX: 12, y: -40, z: 30, scale: 0.94, opacity: 0, zIndex: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
-    below:  { rotateX: -22, y: 70, z: -80, scale: 0.88, opacity: 0, zIndex: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
-  }
+  // Ultra-smooth, elegant 3D deck transitions to match isolated snapped scroll glide.
+  // Reduced-motion users get a plain crossfade — no rotateX/z tilt (vestibular trigger).
+  const variants = reduced
+    ? {
+        active: { rotateX: 0, y: 0, z: 0, scale: 1, opacity: 1, zIndex: 10, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } },
+        above:  { rotateX: 0, y: 0, z: 0, scale: 1, opacity: 0, zIndex: 0, transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] } },
+        below:  { rotateX: 0, y: 0, z: 0, scale: 1, opacity: 0, zIndex: 0, transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] } },
+      }
+    : {
+        active: { rotateX: 0, y: 0, z: 0, scale: 1, opacity: 1, zIndex: 10, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+        above:  { rotateX: 12, y: -40, z: 30, scale: 0.94, opacity: 0, zIndex: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+        below:  { rotateX: -22, y: 70, z: -80, scale: 0.88, opacity: 0, zIndex: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+      }
 
   return (
     <motion.div
@@ -260,7 +269,8 @@ export default function HowWeWork({
 }) {
   const settings = initialSettings || DEFAULT_SETTINGS
   const steps = (initialSteps && initialSteps.length > 0) ? initialSteps : DEFAULT_STEPS
-  
+  const reduced = !!useReducedMotion()
+
   const containerRef = useRef<HTMLDivElement>(null)
   const [displayStep, setDisplayStep] = useState(0)
   const [trackPct, setTrackPct] = useState(0)
@@ -379,10 +389,14 @@ export default function HowWeWork({
               background: '#F5C518',
               opacity: 0.08 + (i % 5) * 0.04,
             }}
-            animate={{
-              y: [0, i % 2 === 0 ? -26 : -18, 0],
-              x: [0, i % 3 === 0 ? 12 : -10, 0],
-            }}
+            animate={
+              reduced
+                ? undefined
+                : {
+                    y: [0, i % 2 === 0 ? -26 : -18, 0],
+                    x: [0, i % 3 === 0 ? 12 : -10, 0],
+                  }
+            }
             transition={{
               duration: 8 + (i % 5) * 2,
               repeat: Infinity,
@@ -534,6 +548,7 @@ export default function HowWeWork({
                   total={steps.length}
                   active={i === displayStep}
                   state={state}
+                  reduced={reduced}
                 />
               )
             })}
@@ -545,7 +560,7 @@ export default function HowWeWork({
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none"
           animate={{
             opacity: displayStep > 0 ? 0 : 0.45,
-            y: [0, 7, 0],
+            y: reduced ? 0 : [0, 7, 0],
           }}
           transition={{ y: { duration: 2, repeat: Infinity, ease: 'easeInOut' }, opacity: { duration: 0.4 } }}
         >
