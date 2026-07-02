@@ -4,6 +4,7 @@ import { buildMetadata } from '@/components/seo/MetaTags'
 import BreadcrumbSchema from '@/components/seo/schemas/BreadcrumbSchema'
 import FadeIn from '@/components/ui/FadeIn'
 import { getResources } from '@/content/resources'
+import { staggerDelay } from '@/lib/motion'
 
 export const metadata: Metadata = buildMetadata(null, {
   title: 'Free Engineering Resources | Phantex Tech',
@@ -38,7 +39,7 @@ export default function ResourcesPage() {
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {resources.map((r, i) => (
-            <FadeIn key={r.slug} delay={i * 0.06}>
+            <FadeIn key={r.slug} delay={staggerDelay(i)}>
               <Link
                 href={`/resources/${r.slug}`}
                 className="group flex h-full flex-col rounded-2xl bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-amber-200 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)]"

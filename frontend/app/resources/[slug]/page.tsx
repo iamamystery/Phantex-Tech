@@ -132,7 +132,7 @@ export default function ResourceDetailPage({ params }: { params: { slug: string 
             <h2 className="mb-8 font-display text-2xl font-black text-[#111111]">More resources</h2>
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               {related.map((r) => (
-                <Link key={r.slug} href={`/resources/${r.slug}`} className="group flex flex-col rounded-2xl bg-white p-6 transition-all hover:-translate-y-1 hover:border-amber-200 hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)]" style={{ border: '1px solid #EDEAE4' }}>
+                <Link key={r.slug} href={`/resources/${r.slug}`} className="group flex flex-col rounded-2xl bg-white p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-amber-200 hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)]" style={{ border: '1px solid #EDEAE4' }}>
                   <span className="mb-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400">{r.format} · {r.pages} pages</span>
                   <h3 className="mb-2 font-display text-[16px] font-black text-[#111111] group-hover:text-amber-600">{r.title}</h3>
                   <p className="font-body text-sm leading-relaxed text-stone-500 line-clamp-2">{r.description}</p>

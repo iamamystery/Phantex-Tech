@@ -2,8 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import ActionButtons from "./ActionButtons";
 import type { ChatAction } from "@/lib/ai/types";
+import { DURATION, EASE_PREMIUM } from "@/lib/motion";
 
 interface Message {
   role: "user" | "assistant";
@@ -24,10 +26,11 @@ export default function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const [sessionId] = useState(() => crypto.randomUUID());
   const bottomRef = useRef<HTMLDivElement>(null);
+  const prefersReduced = useReducedMotion();
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    bottomRef.current?.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth" });
+  }, [messages, prefersReduced]);
 
   // The /chat page hosts the full Phantex AI workspace — hide the floating
   // widget there to avoid two chat surfaces on the same screen.
@@ -86,8 +89,15 @@ export default function ChatWidget() {
       </button>
 
       {/* Chat panel */}
+      <AnimatePresence>
       {open && (
-        <div className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 bg-[#FAFAF8] border border-[#E7E5E4] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        <motion.div
+          initial={prefersReduced ? undefined : { opacity: 0, y: 12, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={prefersReduced ? undefined : { opacity: 0, y: 12, scale: 0.98 }}
+          transition={{ duration: prefersReduced ? 0 : DURATION.base, ease: EASE_PREMIUM }}
+          className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 bg-[#FAFAF8] border border-[#E7E5E4] rounded-2xl shadow-2xl flex flex-col overflow-hidden origin-bottom-right"
+        >
           {/* Header */}
           <div className="bg-[#0F0F0F] px-4 py-3 flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-[#F59E0B] flex items-center justify-center text-[#0F0F0F] text-sm font-bold">
@@ -111,8 +121,11 @@ export default function ChatWidget() {
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-80">
             {messages.map((msg, i) => (
-              <div
+              <motion.div
                 key={i}
+                initial={prefersReduced ? undefined : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: prefersReduced ? 0 : 0.35, ease: EASE_PREMIUM }}
                 className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
@@ -125,15 +138,15 @@ export default function ChatWidget() {
                   {msg.content}
                   {msg.role === "assistant" && <ActionButtons actions={msg.actions} />}
                 </div>
-              </div>
+              </motion.div>
             ))}
             {loading && (
               <div className="flex justify-start">
                 <div className="bg-[#F5F5F0] border border-[#E7E5E4] px-3 py-2 rounded-xl rounded-bl-sm">
                   <span className="flex gap-1">
-                    <span className="w-1.5 h-1.5 bg-[#F59E0B] rounded-full animate-bounce [animation-delay:0ms]"/>
-                    <span className="w-1.5 h-1.5 bg-[#F59E0B] rounded-full animate-bounce [animation-delay:150ms]"/>
-                    <span className="w-1.5 h-1.5 bg-[#F59E0B] rounded-full animate-bounce [animation-delay:300ms]"/>
+                    <span className="w-1.5 h-1.5 bg-[#F59E0B] rounded-full motion-safe:animate-bounce [animation-delay:0ms]"/>
+                    <span className="w-1.5 h-1.5 bg-[#F59E0B] rounded-full motion-safe:animate-bounce [animation-delay:150ms]"/>
+                    <span className="w-1.5 h-1.5 bg-[#F59E0B] rounded-full motion-safe:animate-bounce [animation-delay:300ms]"/>
                   </span>
                 </div>
               </div>
@@ -161,8 +174,9 @@ export default function ChatWidget() {
               </svg>
             </button>
           </div>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </>
   );
 }

@@ -1,4 +1,5 @@
 import FadeIn from '@/components/ui/FadeIn'
+import { staggerDelay } from '@/lib/motion'
 
 interface StatItem {
   value: string
@@ -38,7 +39,7 @@ export default function Stats() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {STATS.map((stat, i) => (
-            <FadeIn key={stat.label} delay={i * 0.1}>
+            <FadeIn key={stat.label} delay={staggerDelay(i)}>
               <div className="flex flex-col gap-2">
                 <div className="font-display text-5xl md:text-6xl font-extrabold text-white tabular-nums">
                   {stat.value}

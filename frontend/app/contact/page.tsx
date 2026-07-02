@@ -453,7 +453,7 @@ export default function ContactPage() {
                       }}
                     >
                       {/* Sweep shimmer */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-[600ms] ease-out pointer-events-none" />
                       <span className="relative z-10 flex items-center justify-center gap-3">
                         {status === 'submitting' ? (
                           <>

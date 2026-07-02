@@ -18,7 +18,7 @@ export default function ArticleNav({
       {previous ? (
         <Link
           href={`/blog/${previous.slug}`}
-          className="group flex flex-col rounded-2xl bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)]"
+          className="group flex flex-col rounded-2xl bg-white p-5 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)]"
           style={{ border: '1px solid #EDEAE4' }}
         >
           <span className="mb-2 flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400">
@@ -38,7 +38,7 @@ export default function ArticleNav({
       {next ? (
         <Link
           href={`/blog/${next.slug}`}
-          className="group flex flex-col rounded-2xl bg-white p-5 text-right transition-all hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)]"
+          className="group flex flex-col rounded-2xl bg-white p-5 text-right transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)]"
           style={{ border: '1px solid #EDEAE4' }}
         >
           <span className="mb-2 flex items-center justify-end gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400">

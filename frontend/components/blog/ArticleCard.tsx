@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import FadeIn from '@/components/ui/FadeIn'
 import type { ArticleSummary } from '@/content/types'
+import { staggerDelay } from '@/lib/motion'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Redesigned article card — no image, no gradient header, no empty coloured box.
@@ -18,7 +19,7 @@ export default function ArticleCard({ article, index = 0 }: ArticleCardProps) {
   const { categoryProfile, authorProfile } = article
 
   return (
-    <FadeIn delay={Math.min(index * 0.05, 0.3)} className="h-full">
+    <FadeIn delay={staggerDelay(index, 0.05, 0.3)} className="h-full">
       <Link
         href={`/blog/${article.slug}`}
         className="group flex h-full flex-col rounded-2xl bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-amber-200 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/60"

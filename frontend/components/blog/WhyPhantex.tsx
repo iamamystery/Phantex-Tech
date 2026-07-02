@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useInView } from 'framer-motion'
 import FadeIn from '@/components/ui/FadeIn'
+import { staggerDelay } from '@/lib/motion'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // "Why Companies Choose Phantex" — the final trust-building section before the
@@ -144,7 +145,7 @@ export default function WhyPhantex() {
               {/* Trust pillars — 2x2 */}
               <div className="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2">
                 {PILLARS.map((pillar, i) => (
-                  <FadeIn key={pillar.title} delay={i * 0.06}>
+                  <FadeIn key={pillar.title} delay={staggerDelay(i)}>
                     <div
                       className="group flex h-full items-start gap-4 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/30"
                       style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
